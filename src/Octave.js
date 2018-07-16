@@ -5,15 +5,18 @@ import {octave} from "./constants";
 // const black=[1,3,6,8,10];
 class Octave extends Component {
     render() {
-        const {startKey, onGuess, width,showKeyName} = this.props;
-        return (
-            <div className='octave' style={{width: `${width}%`}}>
-                {octave.map((key, index) => <span key={key} onClick={() => {onGuess(index + startKey)}}
-                                                  className={`key key-${key} key-${index + startKey}`}><span>{showKeyName ? key: '' }</span></span>)}
-            </div>
-        );
+        const {startKey, onGuess, width, showKeyName, note,guessedNote} = this.props;
+
+        return (<div className='octave' style={{width: `${width}%`}}>
+                {octave.map((key, index) => {
+                    const keyNo = index + startKey;
+                    return <span key={key}
+                                 onClick={() => {onGuess(keyNo)}}
+                        className={`key key-${key}${(guessedNote && keyNo === note)? ' key-correct' : ''} key-${keyNo}`}><span>{showKeyName ? key : ''}</span></span>})}
+            </div>);
     }
 }
 
 
 export default Octave;
+

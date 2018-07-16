@@ -11,7 +11,7 @@ class Keys extends Component {
     };
 
     render() {
-        const {startC, octaveCount, onGuess,showKeyName} = this.props;
+        const {startC, octaveCount, onGuess,showKeyName,guessedNote,note} = this.props;
         return (
             <div className='keys'>
                 {[...Array(octaveCount)].map((val, index) => <Octave
@@ -19,6 +19,8 @@ class Keys extends Component {
                     startKey={startC + (index * 12)}
                     width={100 / octaveCount}
                     showKeyName={showKeyName}
+                    guessedNote={guessedNote}
+                    note={note}
                     />
                     )}
             </div>

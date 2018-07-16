@@ -1,20 +1,20 @@
 import React, {Component} from 'react';
 import Note from "./Note";
 import Keys from "./Keys";
-import {C2, C3, notes} from "./constants";
+import {C1, C2, C3, C4, C5, C6, notes} from "./constants";
 import Solve from "./Solve";
 
 class App extends Component {
     state = {
         guessedNote: null,
-        note: 48,
-        startC: C3,
-        octaveCount: 3,
+        note: null,
+        startC: C2,
+        octaveCount: 4,
         showKeyName: false
     };
 
     componentDidMount() {
-        setInterval(this.setGuess,400);
+         this.setGuess();
     }
 
     render() {
@@ -22,7 +22,7 @@ class App extends Component {
         return (
             <div className="App">
                 <Note note={note} guessedNote={guessedNote}/>
-                <Keys onGuess={this.onGuess} startC={startC} octaveCount={octaveCount} showKeyName={showKeyName}/>
+                <Keys guessedNote={guessedNote} note={note}onGuess={this.onGuess} startC={startC} octaveCount={octaveCount} showKeyName={showKeyName}/>
                 {guessedNote && <div className={'solution'}><Solve guessedNote={guessedNote} note={note}/></div>}
             </div>
         );
@@ -30,10 +30,13 @@ class App extends Component {
 
     setGuess = () => {
         const {startC, octaveCount} = this.state;
-        const max=(octaveCount * 12)+startC;
-        const note =Math.max(((this.state.note+12)%(max)),startC);
-        //const note=Math.floor(Math.random() * octaveCount * 12) + startC;
-        // console.log(note);
+        // const max=(octaveCount * 12)+startC;
+        // const note =Math.max(((this.state.note+1)%(max)),startC);
+        let note=Math.floor(Math.random() * octaveCount * 12) + startC;
+        while(note>81 || note <40){
+            note=Math.floor(Math.random() * octaveCount * 12) + startC;
+        }
+
         this.setState({
             note: note,
             guessedNote: null,

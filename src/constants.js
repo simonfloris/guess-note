@@ -142,6 +142,7 @@ const
     C8 = 108;
 
 const octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
+const blackKeys= [1,3,6,8,10];
 
-export {C0,C1, C2, C3, C4, C5, C6,C7,C8, notes, octave};
+export {C0,C1, C2, C3, C4, C5, C6,C7,C8, notes, octave,blackKeys};
 
