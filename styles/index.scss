@@ -1,0 +1,37 @@
+@import 'vars';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import 'components/Note';
+@import 'components/Keys';
+
+body {
+  font-size: 26px;
+  text-align: center;
+}
+
+.solution {
+  position: absolute;
+  text-align: center;
+  font-size: 80px;
+  line-height: 80px;
+  top:10%;
+  left:30%;
+  width: 40%;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 2px 2px 2px #444;
+  color: white;
+  .right {
+    background-color: #44bb44;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px #444;
+  }
+  .wrong {
+    background-color: #995555;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px #444;
+  }
+}
