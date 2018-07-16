@@ -8,8 +8,8 @@ class App extends Component {
     state = {
         guessedNote: null,
         note: null,
-        startC: C2,
-        octaveCount: 4,
+        startC: C3,
+        octaveCount: 3,
         showKeyName: false
     };
 

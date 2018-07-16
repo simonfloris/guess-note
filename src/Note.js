@@ -70,7 +70,7 @@ class Note extends Component {
 
         return (
             <div className='staffs'>
-                {note && <span style={{
+                {note && false && <span style={{
                     position: 'absolute',
                     left: '50%'
                 }}> {notes[note].name}{notes[note].otherName} {note}</span>}
