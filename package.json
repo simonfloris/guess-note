@@ -42,7 +42,10 @@
     "react-pixi-fiber": "^0.4.7",
     "react-scripts": "1.1.4",
     "react-tap-or-click": "^0.2.1",
-    "regenerator": "^0.13.2"
+    "regenerator": "^0.13.2",
+    "typeface-montserrat": "^0.0.54",
+    "typeface-nanum-gothic-coding": "^0.0.56",
+    "typeface-pacifico": "^0.0.54"
   },
   "scripts": {
     "dev": "webpack --mode development",

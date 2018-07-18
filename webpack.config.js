@@ -46,12 +46,16 @@ const webpackConfig = (env, argv) => {
                         "css-loader"],
                 },
                 {
-                    test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-                    use: "url-loader?limit=10000&mimetype=application/font-woff"
-                }, {
-                    test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-                    use: "url-loader?limit=10000&mimetype=application/font-woff"
-                }, {
+                    test: /\.woff(\?v=\d+\.\d+\.\d+)?|\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+                    use: development ? "url-loader" : {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
+                            context: ''
+                        }
+                    }
+                },
+               {
                     test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
                     use: "url-loader?limit=10000&mimetype=application/octet-stream"
                 }, {
@@ -59,7 +63,13 @@ const webpackConfig = (env, argv) => {
                     use: "file-loader"
                 }, {
                     test: /\.(pdf|jpg|png|gif|svg|ico)$/,
-                    use: development ? "url-loader" : 'file-loader'
+                    use: development ? "url-loader" : {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
+                            context: ''
+                        }
+                    }
                 },
             ]
         },
@@ -74,6 +84,9 @@ const webpackConfig = (env, argv) => {
         plugins: development ? [
             new webpack.HotModuleReplacementPlugin(),
             new webpack.NoEmitOnErrorsPlugin(),
+            new webpack.EnvironmentPlugin({
+                NODE_ENV: development ? 'development' : 'production'
+            }),
             new HtmlWebpackPlugin({
                 template: './src/index.html',
                 files: {
@@ -83,6 +96,9 @@ const webpackConfig = (env, argv) => {
         ] : [
             new webpack.NoEmitOnErrorsPlugin(),
             new MiniCssExtractPlugin("bundle.css"),
+            new webpack.EnvironmentPlugin({
+                NODE_ENV: development ? 'development' : 'production'
+            }),
             new HtmlWebpackPlugin({
                 template: './src/index.html',
                 files: {
@@ -102,9 +118,9 @@ const webpackConfig = (env, argv) => {
             port: PORT,
             host: HOST,
         } : undefined,
-        // optimization:{
-        //     // minimizer:[]
-        // }
+        optimization: {
+            minimizer: []
+        }
     }
 };
 
