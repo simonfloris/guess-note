@@ -1,0 +1,41 @@
+
+body {
+
+}
+
+.app {
+  margin: 1vw;
+  width: 100vw;
+  height: 56.25vw;
+  position: relative;
+}
+
+.upper {
+  height: 30.25vw;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+}
+
+.settings {
+  width: 20%;
+  height: 30.25vw;
+}
+
+
+.keys {
+  width: 96vw;
+  height: 18vw;
+}
+
+
+.staffs {
+  position: relative;
+  width: 60%;
+  height: 30.25vw;
+}
+
+.feedback{
+  width:20%;
+}

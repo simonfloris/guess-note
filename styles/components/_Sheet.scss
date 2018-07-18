@@ -1,0 +1,75 @@
+.staffs {
+  position: relative;
+  //@include proportional-box(16, 9);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.staff {
+  &-help {
+    position: absolute;
+    opacity: 0;
+    top: 26%;
+  }
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+
+  .lines {
+    width: 100%
+  }
+  .head {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    top: 0;
+    &.clef {
+      height: 49%;
+      top: 7%;
+    }
+    &.bassClef {
+      top: 55%;
+      height: 27%;
+      left:3%;
+    }
+
+  }
+
+}
+
+.note {
+  display: block;
+  left: 50%;
+  top: 47%;
+  position: absolute;
+  width: 2%;
+  border-radius: 50%;
+  height: 6%;
+  background-color: black;
+
+  &.sharp:before {
+    content: ' ';
+    background: url('./../src/asssets/sharp.svg') no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: 180%;
+    top: -40%;
+    position: absolute;
+    left: -60%;
+  }
+}
+
+.flat-note-39-after, .note-40:after, .note-38:after, .note-60:after, .sharp.note-61:after,
+.sharp.note-81:after, .note-81:after {
+  background-color: black;
+  width: 150%;
+  content: ' ';
+  height: 10%;
+  left: -25%;
+  display: block;
+  transform: translate(0, 410%);
+  position: absolute;
+}

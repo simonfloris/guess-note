@@ -1,4 +1,4 @@
-// MIDI note number	Key:{organKey:number (,pianoKey:Organ)	Key number (Keys)	Note names (English)	Note names (German)	Frequency (Equal tuning at 440 Hz)
+// MIDI note number	Key:{organKey:number (,pianoKey:Organ)	Key number (Keys)	Sheet names (English)	Sheet names (German)	Frequency (Equal tuning at 440 Hz)
 // top of MIDI tuning range	 	 	G#9/Ab9	gis’’’’’’/ges’’’’’’	13289.75
 const notes = {
     127: {name: 'G9', otherName: 'g’’’’’’', freq: 2543.85},

@@ -10,10 +10,10 @@ class Octave extends Component {
         return (<div className='octave' style={{width: `${width}%`}}>
                 {octave.map((key, index) => {
                     const keyNo = index + startKey;
-                    return <span key={key}
-                                 onClick={() => {onGuess(keyNo)}}
-                        className={`key key-${key}${(guessedNote && keyNo === note)? ' key-correct' : ''} key-${keyNo}`}><span>{showKeyName ? key : ''}</span></span>})}
-            </div>);
+                    const className=`key key-${key}${(guessedNote && keyNo === note)? ' key-correct' : ''} key-${keyNo}`;
+                    return (<span key={key}
+                                 onMouseUp={() => {onGuess(keyNo)}}
+                        className={className}><span>{showKeyName ? key : ''}</span></span>)})}</div>);
     }
 }
 
