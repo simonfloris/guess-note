@@ -18,7 +18,7 @@ export const gameStates = {
 class App extends Component {
     state = {
         guessedNote: null,
-        note: C3+1,
+        note: null,
         startC: C2,
         octaveCount: 4,
         showKeyName: false,
@@ -31,32 +31,38 @@ class App extends Component {
             this.setState({guessedNote: note, note: note});
             await sleep(10);
         }
+        this.setState({guessedNote: null, note: null});
         await sleep(200);
     }
-    onToggleAutomatic = (bool) => {
+    onToggleAutomatic = () => {
           this.setState(prevState => ({automatic: !prevState.automatic}));
     };
 
     onSetStart = (note) => {
         this.setState({startC: note});
-        this.initQuestion()
+        this.init()
 
     };
     onSetRange = (val) => {
         this.setState({octaveCount: val});
-        this.initQuestion()
+        this.init()
     };
     onToggleShowKeyName = () => {
         this.setState(prevState => ({showKeyName: !prevState.showKeyName}));
     };
+    init(){
+        this.showOff().then(this.initQuestion);
+    }
 
     componentDidMount() {
-        this.showOff().then(this.initQuestion);
+        this.init();
     }
 
     noteRange() {
         const {octaveCount, startC} = this.state;
-        return flatten([...Array(octaveCount)].map((_, octaveIndex) => [...Array(12)].map((_, keyIndex) => octaveIndex * 12 + keyIndex + startC)));
+        const allNotes= flatten([...Array(octaveCount)].map((_, octaveIndex) => [...Array(12)].map((_, keyIndex) => octaveIndex * 12 + keyIndex + startC)));
+        allNotes.push(allNotes[allNotes.length-1]+1);
+        return allNotes;
     }
 
     onClick = () => {
@@ -83,6 +89,7 @@ class App extends Component {
                     <Feedback {...this.state} />
                 </div>
                 <Keys {...this.state}
+                    keyRange={this.noteRange()}
                       onGuess={this.onGuess}
                 />
                 {this.state.gameState===gameStates.waiting && <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>}
@@ -107,7 +114,7 @@ class App extends Component {
     onGuess = (key) => {
         console.log('guessing');
         this.setState({guessedNote: key,gameState:gameStates.waiting});
-        if(this.state.automatic){setTimeout(this.proceed,1000)};
+        if(this.state.automatic){setTimeout(this.proceed,900)}
     };
 
     proceed=()=> {

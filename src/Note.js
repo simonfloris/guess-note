@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {blackKeys} from "./constants";
 import {lineWidth} from "./Sheet";
 import Modifier from "./Modifier";
+import {Motion, spring, StaggeredMotion} from "react-motion";
+const SPRING_CONFIG = { stiffness: 400, damping: 28 };
+const WOBBLY_SPRING = {stiffness: 280, damping: 12};
 
 export const isBlackKey = (note) => {
     const octave = Math.floor(note - (note % 12));
@@ -20,14 +23,18 @@ class Note extends Component {
         const x = (-offset / 2) + 550;
         const clefOffset = {};
         return (
+            <Motion
+				defaultStyle={{x:x+Math.random()*40-40,y:y-20,rx:18,ry:15}}
+				style={{x:spring(x,{...SPRING_CONFIG}),y:spring(y,{...SPRING_CONFIG}),rx:spring(13,{...WOBBLY_SPRING}),ry:spring(10,{...WOBBLY_SPRING})}}>
+				{interpolatedStyle =>
             <g>
-                <ellipse rx={13} ry={10} cx={x} cy={y} {...style}/>
-                {count > 0 && [...Array(count)].map((val, index) => <line {...style} key={index} x1={x - 18} x2={x + 18}
+                <ellipse rx={interpolatedStyle.rx} ry={interpolatedStyle.ry} cx={interpolatedStyle.x} cy={interpolatedStyle.y} {...style}/>
+                {count > 0 && [...Array(count)].map((val, index) => <line {...style} key={index} x1={interpolatedStyle.x - 18} x2={interpolatedStyle.x + 18}
                                                                           y1={y + index * offsetModifier  * lineWidth + lineOffset}
                                                                           y2={y + index * offsetModifier  * lineWidth + lineOffset}
                                                                           stroke="black" strokeWidth="1"/>)}
-                {noteModifier&& <Modifier x={x} y={y} type={noteModifier}/>}
-            </g>
+                {noteModifier&& <Modifier {...interpolatedStyle} type={noteModifier}/>}
+            </g>}</Motion>
 
         );
     }

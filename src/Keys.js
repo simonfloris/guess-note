@@ -1,38 +1,43 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import Octave from "./Octave";
-import {C2} from "./constants";
+import {C2, whiteKeys, blackKeys} from "./constants";
+import Key from "./Key";
 
+export const keyTypes={
+    black:'black',
+    white:'white'
+};
 
 class Keys extends Component {
     static defaultProps = {
         startC: C2,
-        octaveCount: 2
+        octaveCount: 2,
+        keyRange: []
+    };
+    whiteKeys = () => {
+        return this.props.keyRange.filter(index => whiteKeys.includes(index % 12));
     };
 
+
     render() {
-        const {startC, octaveCount, onGuess,showKeyName,guessedNote,note} = this.props;
+        const whiteKeys = this.whiteKeys();
+        const {keyRange, onGuess, showKeyName, guessedNote, note} = this.props;
         return (
             <div className='keys'>
-                {[...Array(octaveCount)].map((val, index) => <Octave
-                    key={startC + (index * 12)}
-                    startKey={startC + (index * 12)}
-                    width={100 / octaveCount}
-                    showKeyName={showKeyName}
-                    guessedNote={guessedNote}
-                    onGuess={onGuess}
-                    note={note}
+                {(keyRange).map((keyNo) => <Key
+                        key={keyNo}
+                        keyType={whiteKeys.includes(keyNo)?keyTypes.white:keyTypes.black}
+                        keyNo={keyNo}
+                        width={100 / whiteKeys.length}
+                        showKeyName={showKeyName}
+                        guessedNote={guessedNote}
+                        onGuess={onGuess}
+                        note={note}
                     />
-                    )}
+                )}
             </div>
         );
     }
 }
 
-Keys.propTypes = {
-    startC: PropTypes.number,
-    octaveCount: PropTypes.number
-
-};
 
 export default Keys;
