@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {keyTypes} from "./Keys";
+import {octave} from "./constants";
 // const white=[0,2,4,5,7,9,11];
 // const black=[1,3,6,8,10];
 class Key extends Component {
@@ -18,7 +19,7 @@ class Key extends Component {
                               onGuess(keyNo)
                           }
                       }}
-                      className={className}><span>{showKeyName ? key : ''}</span></span>);
+                      className={className}><span>{showKeyName ? octave[keyNo%12] : ''}</span></span>);
     }
 }
 
