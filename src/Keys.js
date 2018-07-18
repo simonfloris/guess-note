@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {C2, whiteKeys, blackKeys} from "./constants";
 import Key from "./Key";
+import {gameStates} from "./App";
 
 export const keyTypes={
     black:'black',
@@ -20,7 +21,7 @@ class Keys extends Component {
 
     render() {
         const whiteKeys = this.whiteKeys();
-        const {keyRange, onGuess, showKeyName, guessedNote, note} = this.props;
+        const {keyRange, onGuess, showKeyName, guessedNote, note,gameState} = this.props;
         return (
             <div className='keys'>
                 {(keyRange).map((keyNo) => <Key
@@ -32,6 +33,7 @@ class Keys extends Component {
                         guessedNote={guessedNote}
                         onGuess={onGuess}
                         note={note}
+                        gameState={gameState}
                     />
                 )}
             </div>

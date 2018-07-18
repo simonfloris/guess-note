@@ -1092,28 +1092,28 @@ class Staff_Staff extends react["Component"] {
 
 
 
-const Sharp = () => react_default.a.createElement(
-    "g",
-    { stroke: "#000", transform: 'matrix(0.07,0,0,-0.07,0,36)' },
-    react_default.a.createElement("path", {
-        d: "m 216,-312 c 0,-10 -8,-19 -18,-19 -10,0 -19,9 -19,19 v 145 l -83,-31 v -158 c 0,-10 -9,-19 -19,-19 -10,0 -18,9 -18,19 v 145 l -32,-12 c -2,-1 -5,-1 -7,-1 -11,0 -20,9 -20,20 v 60 c 0,8 5,16 13,19 l 46,16 V 51 L 27,40 C 25,39 22,39 20,39 9,39 0,48 0,59 v 60 c 0,8 5,15 13,18 l 46,17 v 158 c 0,10 8,19 18,19 10,0 19,-9 19,-19 V 167 l 83,31 v 158 c 0,10 9,19 19,19 10,0 18,-9 18,-19 V 211 l 32,12 c 2,1 5,1 7,1 11,0 20,-9 20,-20 v -60 c 0,-8 -5,-16 -13,-19 L 216,109 V -51 l 32,11 c 2,1 5,1 7,1 11,0 20,-9 20,-20 v -60 c 0,-8 -5,-15 -13,-18 l -46,-17 V -312 z M 96,65 V -95 l 83,30 V 95 z"
+const Sharp = ({ color = '#000' }) => react_default.a.createElement(
+    'g',
+    { stroke: color, fill: color, transform: 'matrix(0.07,0,0,-0.07,0,36)' },
+    react_default.a.createElement('path', {
+        d: 'm 216,-312 c 0,-10 -8,-19 -18,-19 -10,0 -19,9 -19,19 v 145 l -83,-31 v -158 c 0,-10 -9,-19 -19,-19 -10,0 -18,9 -18,19 v 145 l -32,-12 c -2,-1 -5,-1 -7,-1 -11,0 -20,9 -20,20 v 60 c 0,8 5,16 13,19 l 46,16 V 51 L 27,40 C 25,39 22,39 20,39 9,39 0,48 0,59 v 60 c 0,8 5,15 13,18 l 46,17 v 158 c 0,10 8,19 18,19 10,0 19,-9 19,-19 V 167 l 83,31 v 158 c 0,10 9,19 19,19 10,0 18,-9 18,-19 V 211 l 32,12 c 2,1 5,1 7,1 11,0 20,-9 20,-20 v -60 c 0,-8 -5,-16 -13,-19 L 216,109 V -51 l 32,11 c 2,1 5,1 7,1 11,0 20,-9 20,-20 v -60 c 0,-8 -5,-15 -13,-18 l -46,-17 V -312 z M 96,65 V -95 l 83,30 V 95 z'
     })
 );
 
-const Flat = () => react_default.a.createElement(
-    "g",
-    { stroke: "#000", transform: 'matrix(0.07,0,0,-0.07,0.108,36.86)' },
-    react_default.a.createElement("path", {
-        d: "m 27,41 -1,-66 v -11 c 0,-22 1,-44 4,-66 45,38 93,80 93,139 0,33 -14,67 -43,67 C 49,104 28,74 27,41 z m -42,-179 -12,595 c 8,5 18,8 27,8 9,0 19,-3 27,-8 L 20,112 c 25,21 58,34 91,34 52,0 89,-48 89,-102 0,-80 -86,-117 -147,-169 -15,-13 -24,-38 -45,-38 -13,0 -23,11 -23,25 z"
+const Flat = ({ color = '#000' }) => react_default.a.createElement(
+    'g',
+    { stroke: color, fill: color, transform: 'matrix(0.07,0,0,-0.07,0.108,36.86)' },
+    react_default.a.createElement('path', {
+        d: 'm 27,41 -1,-66 v -11 c 0,-22 1,-44 4,-66 45,38 93,80 93,139 0,33 -14,67 -43,67 C 49,104 28,74 27,41 z m -42,-179 -12,595 c 8,5 18,8 27,8 9,0 19,-3 27,-8 L 20,112 c 25,21 58,34 91,34 52,0 89,-48 89,-102 0,-80 -86,-117 -147,-169 -15,-13 -24,-38 -45,-38 -13,0 -23,11 -23,25 z'
     })
 );
 
-const Modifier = ({ type, x, y }) => {
+const Modifier = ({ type, x, y, stroke }) => {
     return react_default.a.createElement(
-        "svg",
+        'svg',
         { x: x - 39, y: y - 36 },
-        type === noteModifiers.flat && react_default.a.createElement(Flat, null),
-        type === noteModifiers.sharp && react_default.a.createElement(Sharp, null)
+        type === noteModifiers.flat && react_default.a.createElement(Flat, { color: stroke }),
+        type === noteModifiers.sharp && react_default.a.createElement(Sharp, { color: stroke })
     );
 };
 
@@ -1129,8 +1129,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
-const SPRING_CONFIG = { stiffness: 400, damping: 28 };
-const WOBBLY_SPRING = { stiffness: 280, damping: 12 };
+const SPRING_CONFIG = { stiffness: 410, damping: 28 };
+const WOBBLY_SPRING = { stiffness: 380, damping: 12 };
 
 const isBlackKey = note => {
     const octave = Math.floor(note - note % 12);
@@ -1167,28 +1167,36 @@ class Note_Note extends react["Component"] {
         const { note, offset, noteModifier, style } = this.props;
         const { count, lineOffset, offsetModifier } = this.helpLines();
         const y = offset;
-        const x = -offset / 2 + 550;
+        const x = -offset / 3 + 550;
+        const rx = 13;
+        const ry = 10;
         const clefOffset = {};
         return react_default.a.createElement(
             react_motion["Motion"],
             {
-                defaultStyle: { x: x + Math.random() * 40 - 40, y: y - 20, rx: 18, ry: 15 },
-                style: { x: Object(react_motion["spring"])(x, _extends({}, SPRING_CONFIG)), y: Object(react_motion["spring"])(y, _extends({}, SPRING_CONFIG)), rx: Object(react_motion["spring"])(13, _extends({}, WOBBLY_SPRING)), ry: Object(react_motion["spring"])(10, _extends({}, WOBBLY_SPRING)) } },
+                defaultStyle: { x: x + Math.random() * 20 - 10, y: y - 30, rx: rx + 10, ry: ry + 10 },
+                style: { x: Object(react_motion["spring"])(x, _extends({}, SPRING_CONFIG)), y: Object(react_motion["spring"])(y, _extends({}, SPRING_CONFIG)), rx: Object(react_motion["spring"])(ry, _extends({}, SPRING_CONFIG)), ry: Object(react_motion["spring"])(ry, _extends({}, SPRING_CONFIG)) } },
             interpolatedStyle => react_default.a.createElement(
                 "g",
                 null,
                 react_default.a.createElement("ellipse", _extends({ rx: interpolatedStyle.rx, ry: interpolatedStyle.ry, cx: interpolatedStyle.x, cy: interpolatedStyle.y }, style)),
-                count > 0 && [...Array(count)].map((val, index) => react_default.a.createElement("line", _extends({}, style, { key: index, x1: interpolatedStyle.x - 18, x2: interpolatedStyle.x + 18,
+                count > 0 && [...Array(count)].map((val, index) => react_default.a.createElement("line", _extends({}, style, { key: index, x1: interpolatedStyle.x - 20, x2: interpolatedStyle.x + 20,
                     y1: y + index * offsetModifier * lineWidth + lineOffset,
-                    y2: y + index * offsetModifier * lineWidth + lineOffset,
-                    stroke: "black", strokeWidth: "1" }))),
-                noteModifier && react_default.a.createElement(src_Modifier, _extends({}, interpolatedStyle, { type: noteModifier }))
+                    y2: y + index * offsetModifier * lineWidth + lineOffset
+                }, style, { strokeWidth: "1" }))),
+                noteModifier && react_default.a.createElement(src_Modifier, _extends({}, interpolatedStyle, style, { type: noteModifier }))
             )
         );
     }
 
 }
 
+Note_Note.defaultProps = {
+    style: {
+        stroke: '#000',
+        fill: '#000'
+    }
+};
 /* harmony default export */ var src_Note = (Note_Note);
 // CONCATENATED MODULE: ./src/Sheet.js
 var Sheet_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -1281,7 +1289,8 @@ class Sheet_Sheet extends react["PureComponent"] {
                     null,
                     note && react_default.a.createElement(src_Note, Sheet_extends({ note: note }, this.getModifierAndOffset(note))),
                     guessedNote && gameState !== gameStates.init && react_default.a.createElement(src_Note, Sheet_extends({ note: guessedNote }, this.getModifierAndOffset(guessedNote), {
-                        style: { fill: guessedNote === note ? 'green' : 'red' } }))
+                        style: { fill: guessedNote === note ? 'green' : 'red',
+                            stroke: guessedNote === note ? 'green' : 'red' } }))
                 )
             )
         );
@@ -1294,12 +1303,13 @@ class Sheet_Sheet extends react["PureComponent"] {
 
 
 
+
 // const white=[0,2,4,5,7,9,11];
 // const black=[1,3,6,8,10];
 class Key_Key extends react["Component"] {
     render() {
         const { keyNo, keyType, onGuess, width, showKeyName, note, guessedNote, gameState } = this.props;
-        const className = `key key-${keyType}${guessedNote && keyNo === note ? ' key-correct' : ''} key-${keyNo}`;
+        const className = `key key-${keyType}${guessedNote && (gameState === gameStates.showResult || gameStates.init) && keyNo === note ? ' key-correct' : ''} key-${keyNo}`;
         const styleWidth = keyType === keyTypes.white ? `${width}%` : `${width}%`;
         return react_default.a.createElement(
             "span",
@@ -1310,9 +1320,7 @@ class Key_Key extends react["Component"] {
                 onMouseUp: e => {
                     e.stopPropagation();
                     e.preventDefault();
-                    if (!guessedNote) {
-                        onGuess(keyNo);
-                    }
+                    onGuess(keyNo);
                 },
                 className: className },
             react_default.a.createElement(
@@ -1326,6 +1334,7 @@ class Key_Key extends react["Component"] {
 
 /* harmony default export */ var src_Key = (Key_Key);
 // CONCATENATED MODULE: ./src/Keys.js
+
 
 
 
@@ -1346,7 +1355,7 @@ class Keys_Keys extends react["Component"] {
 
     render() {
         const whiteKeys = this.whiteKeys();
-        const { keyRange, onGuess, showKeyName, guessedNote, note } = this.props;
+        const { keyRange, onGuess, showKeyName, guessedNote, note, gameState } = this.props;
         return react_default.a.createElement(
             "div",
             { className: "keys" },
@@ -1358,7 +1367,8 @@ class Keys_Keys extends react["Component"] {
                 showKeyName: showKeyName,
                 guessedNote: guessedNote,
                 onGuess: onGuess,
-                note: note
+                note: note,
+                gameState: gameState
             }))
         );
     }
@@ -1393,7 +1403,7 @@ const Solve = ({ guessedNote, note }) => {
 
 class Settings_Settings extends react["Component"] {
     render() {
-        const { onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic } = this.props;
+        const { onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic, maxTries, tries, onSetTries } = this.props;
         return react_default.a.createElement(
             "div",
             { className: "settings" },
@@ -1402,30 +1412,48 @@ class Settings_Settings extends react["Component"] {
                 null,
                 react_default.a.createElement(
                     "div",
-                    { className: "btn-group-vertical btn-group-justified" },
+                    { className: "btn-group-vertical btn-group-justified tries" },
+                    react_default.a.createElement(
+                        "a",
+                        { href: "#", role: "button", className: "btn btn-label btn-secondary", id: "label-btn-tries",
+                            "aria-disabled": "true" },
+                        "Versuche"
+                    ),
+                    [[0, '\u221E'], [4, '4'], [3, '3'], [2, '2'], [1, '1']].map(([val, label]) => react_default.a.createElement(
+                        "button",
+                        {
+                            className: 'btn btn-sm' + (maxTries === val ? ' btn-success' : ' btn-primary'),
+                            key: val,
+                            onClick: () => onSetTries(val) },
+                        tries && maxTries !== 1 && maxTries === val ? `${tries}/${label}` : label
+                    ))
+                ),
+                react_default.a.createElement(
+                    "div",
+                    { className: "btn-group-vertical btn-group-justified start" },
                     react_default.a.createElement(
                         "a",
                         { href: "#", role: "button", className: "btn btn-label btn-secondary", id: "label-btn-start",
                             "aria-disabled": "true" },
-                        "C links"
+                        "von"
                     ),
-                    [C1, C2, C3, C4, C5].map(note => react_default.a.createElement(
+                    [C5, C4, C3, C2, C1].map(note => react_default.a.createElement(
                         "button",
                         {
                             className: 'btn btn-sm' + (startC === note ? ' btn-success' : ' btn-primary'),
                             key: note,
                             onClick: () => onSetStart(note) },
-                        notes[note].name
+                        notes[note].otherName
                     ))
                 ),
                 react_default.a.createElement(
                     "div",
-                    { className: "btn-group-vertical btn-group-justified" },
+                    { className: "btn-group-vertical btn-group-justified octaves" },
                     react_default.a.createElement(
                         "a",
                         { href: "#", role: "button", className: "btn btn-label btn-secondary", id: "label-btn-range",
                             "aria-disabled": "true" },
-                        '\u00A0<-->\u00A0'
+                        '<-->'
                     ),
                     [1, 2, 3, 4, 5].map(val => react_default.a.createElement(
                         "button",
@@ -1444,14 +1472,14 @@ class Settings_Settings extends react["Component"] {
                     "button",
                     { className: 'btn' + (!showKeyName ? ' btn-secondary' : ' btn-success'),
                         onClick: onToggleShowKeyName },
-                    "Notennamen ",
+                    "Noten",
                     showKeyName ? '!' : '?'
                 ),
                 react_default.a.createElement(
                     "button",
                     { className: 'btn' + (!automatic ? ' btn-secondary' : ' btn-success'),
                         onClick: onToggleAutomatic },
-                    "direkt weiter",
+                    "ohne Pause",
                     automatic ? '!' : '?'
                 )
             )
@@ -1462,6 +1490,8 @@ class Settings_Settings extends react["Component"] {
 Settings_Settings.propTypes = {};
 
 /* harmony default export */ var src_Settings = (Settings_Settings);
+
+// \u00A0 &nbsp;
 // CONCATENATED MODULE: ./src/Feedback.js
 
 
@@ -1469,10 +1499,15 @@ Settings_Settings.propTypes = {};
 
 class Feedback_Feedback extends react["Component"] {
     render() {
-        const { note, gameState, showKeyName } = this.props;
+        const { note, gameState, showKeyName, score } = this.props;
         return react_default.a.createElement(
             'div',
             { className: 'feedback' },
+            react_default.a.createElement(
+                'h3',
+                null,
+                score
+            ),
             gameState === gameStates.playing && react_default.a.createElement(
                 'div',
                 null,
@@ -1485,8 +1520,7 @@ class Feedback_Feedback extends react["Component"] {
             showKeyName && note && react_default.a.createElement(
                 'span',
                 null,
-                notes[note].name,
-                ' / ',
+                ' ',
                 notes[note].otherName
             )
         );
@@ -1515,6 +1549,7 @@ const flatten = arr => arr.reduce((flat, next) => flat.concat(next), []);
 const gameStates = {
     init: 'init',
     playing: 'playing',
+    showResult: 'showResult',
     waiting: 'waiting'
 };
 
@@ -1529,19 +1564,41 @@ class App_App extends react["Component"] {
             octaveCount: 4,
             showKeyName: false,
             gameState: gameStates.init,
-            automatic: true
+            automatic: true,
+            maxTries: 1,
+            tries: 0,
+            score: 0
+        }, this.onSetMaxTries = val => {
+            this.setState({ maxTries: val });
         }, this.onToggleAutomatic = () => {
             this.setState(prevState => ({ automatic: !prevState.automatic }));
         }, this.onSetStart = note => {
-            this.setState({ startC: note });
-            this.init();
+            this.setState({ startC: note, gameState: gameStates.init });
         }, this.onSetRange = val => {
             this.setState({ octaveCount: val });
-            this.init();
         }, this.onToggleShowKeyName = () => {
             this.setState(prevState => ({ showKeyName: !prevState.showKeyName }));
+        }, this.onGuess = key => {
+            if (this.state.gameState === gameStates.playing) {
+                this.setState(prevState => ({
+                    guessedNote: key,
+                    tries: prevState.tries + 1,
+                    gameState: gameStates.waiting
+                }));
+            }
+        }, this.checkGuess = () => {
+            if (this.state.guessedNote === this.state.note || this.state.maxTries && this.state.tries >= this.state.maxTries) {
+                this.setState(prevState => ({ score: prevState.score + 1, gameState: gameStates.showResult }));
+                if (this.state.automatic) {
+                    setTimeout(this.proceed, 900);
+                }
+            }
+            //retry in update
+            else {
+                    this.setState({ gameState: gameStates.playing });
+                }
         }, this.onClick = () => {
-            if (this.state.gameState === gameStates.waiting) {
+            if (this.state.gameState === gameStates.waiting || this.state.gameState === gameStates.showResult) {
                 this.proceed();
             }
         }, this.initQuestion = () => {
@@ -1553,19 +1610,14 @@ class App_App extends react["Component"] {
                 note: note,
                 guessedNote: null,
                 guessReact: null,
+                tries: 0,
                 gameState: gameStates.playing
             });
-        }, this.onGuess = key => {
-            console.log('guessing');
-            this.setState({ guessedNote: key, gameState: gameStates.waiting });
-            if (this.state.automatic) {
-                setTimeout(this.proceed, 900);
-            }
         }, this.proceed = () => {
             const { gameState } = this.state;
             console.log('proceeding');
             switch (gameState) {
-                case gameStates.waiting:
+                case gameStates.showResult:
                     this.initQuestion();
                     return;
                 default:
@@ -1581,15 +1633,24 @@ class App_App extends react["Component"] {
         return _asyncToGenerator(function* () {
             for (const note of _this.noteRange()) {
                 _this.setState({ guessedNote: note, note: note });
-                yield sleep(10);
+                yield sleep(30);
             }
-            _this.setState({ guessedNote: null, note: null });
+            // this.setState({guessedNote: null, note: null});
             yield sleep(200);
         })();
     }
 
     init() {
         this.showOff().then(this.initQuestion);
+    }
+
+    componentDidUpdate(prevState) {
+        if (prevState.gameState && this.state.gameState !== prevState.gameState && this.gameState === gameStates.init) {
+            this.init();
+        }
+        if (this.state.tries !== prevState.tries && this.state.gameState === gameStates.waiting) {
+            this.checkGuess();
+        }
     }
 
     componentDidMount() {
@@ -1624,7 +1685,8 @@ class App_App extends react["Component"] {
                     onSetStart: this.onSetStart,
                     onToggleShowKeyName: this.onToggleShowKeyName,
                     onSetRange: this.onSetRange,
-                    onToggleAutomatic: this.onToggleAutomatic
+                    onToggleAutomatic: this.onToggleAutomatic,
+                    onSetTries: this.onSetMaxTries
                 })),
                 react_default.a.createElement(src_Sheet, { note, guessedNote, gameState }),
                 react_default.a.createElement(src_Feedback, this.state)
@@ -1632,8 +1694,9 @@ class App_App extends react["Component"] {
             react_default.a.createElement(src_Keys, App_extends({}, this.state, {
                 keyRange: this.noteRange(),
                 onGuess: this.onGuess
+
             })),
-            this.state.gameState === gameStates.waiting && react_default.a.createElement(
+            this.state.gameState === gameStates.showResult && react_default.a.createElement(
                 "div",
                 { className: 'solutionWrapper' },
                 react_default.a.createElement(src_Solve, { guessedNote: guessedNote, note: note })

@@ -26,8 +26,8 @@ class App extends Component {
         gameState: gameStates.init,
         automatic: true,
         maxTries: 1,
-        tries:0,
-        score:0,
+        tries: 0,
+        score: 0,
     };
 
     async showOff() {
@@ -38,8 +38,9 @@ class App extends Component {
         // this.setState({guessedNote: null, note: null});
         await sleep(200);
     }
-    onSetMaxTries=(val)=>{
-        this.setState({maxTries:val})
+
+    onSetMaxTries = (val) => {
+        this.setState({maxTries: val})
     };
 
     onToggleAutomatic = () => {
@@ -65,25 +66,33 @@ class App extends Component {
         if (prevState.gameState && this.state.gameState !== prevState.gameState && this.gameState === gameStates.init) {
             this.init();
         }
-        if ( this.state.tries !== prevState.tries && this.gameState === gameStates.playing) {
+        if (this.state.tries !== prevState.tries && this.state.gameState === gameStates.waiting) {
             this.checkGuess();
         }
-          // if (this.state.automatic) {
-        //     setTimeout(this.proceed, 900)
-        // }
     }
-    checkGuess=()=>{
-        if(this.state.guessedNote===this.state.note
-        || this.state.maxTries && this.state.tries===this.state.maxTries
-        ){
-            this.setState({gameState:gameStates.showResult});
-            if (this.state.automatic) {
-             setTimeout(this.proceed, 900)
-         }
-        }
-        //retry
-      else {
 
+    onGuess = (key) => {
+        if(this.state.gameState===gameStates.playing) {
+            this.setState((prevState) => ({
+                guessedNote: key,
+                tries: prevState.tries + 1,
+                gameState: gameStates.waiting
+            }));
+        }
+
+    };
+    checkGuess = () => {
+        if ((this.state.guessedNote === this.state.note)
+            || this.state.maxTries && (this.state.tries >= this.state.maxTries)
+        ) {
+            this.setState((prevState) => ({score: prevState.score + 1, gameState: gameStates.showResult}));
+            if (this.state.automatic) {
+                setTimeout(this.proceed, 900)
+            }
+        }
+        //retry in update
+        else {
+            this.setState({gameState: gameStates.playing})
         }
     };
 
@@ -99,7 +108,7 @@ class App extends Component {
     }
 
     onClick = () => {
-        if (this.state.gameState === gameStates.waiting || this.state.gameState===gameStates.showResult) {
+        if (this.state.gameState === gameStates.waiting || this.state.gameState === gameStates.showResult) {
             this.proceed()
         }
     };
@@ -125,8 +134,9 @@ class App extends Component {
                 <Keys {...this.state}
                       keyRange={this.noteRange()}
                       onGuess={this.onGuess}
+
                 />
-                {this.state.gameState === gameStates.waiting &&
+                {this.state.gameState === gameStates.showResult &&
                 <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>}
             </div>
         );
@@ -142,16 +152,12 @@ class App extends Component {
             note: note,
             guessedNote: null,
             guessReact: null,
-            tries:0,
+            tries: 0,
             gameState: gameStates.playing
         })
 
     };
-    onGuess = (key) => {
-        console.log('guessing');
-        this.setState((prevState)=>({guessedNote: key,tries: prevState.tries+1,gameState: gameStates.waiting}));
 
-    };
 
     proceed = () => {
         const {gameState} = this.state;

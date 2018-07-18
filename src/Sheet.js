@@ -80,7 +80,9 @@ class Sheet extends PureComponent {
                     <Staff>{note && <Note note={note} {...this.getModifierAndOffset(note)}/>}
                         {guessedNote && gameState !== gameStates.init &&
                         <Note note={guessedNote} {...this.getModifierAndOffset(guessedNote)}
-                              style={{fill: guessedNote === note ? 'green' : 'red'}}/>}
+                              style={{fill: guessedNote === note ? 'green' : 'red',
+                                  stroke: guessedNote === note ? 'green' : 'red'}
+                        }/>}
                     </Staff>
                 </div>
             </div>);

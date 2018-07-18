@@ -1196,8 +1196,9 @@ mark,
     justify-content: space-between; }
   .settings .btn-group-vertical {
     padding: 2%; }
+  .settings a.btn {
+    font-family: 'Nanum Gothic Coding', monospace; }
   .settings .btn {
-    font-family: 'Nanum Gothic Coding',monospace;
     color: #fff;
     padding: 0.1rem 0.25rem;
     font-size: 0.8rem;
@@ -1224,8 +1225,6 @@ mark,
       background-color: #44bb44 !important; }
     .keys .key:hover {
       background-color: grey; }
-    .keys .key span {
-      position: absolute; }
     .keys .key-black {
       background-color: black;
       color: white;
@@ -1235,6 +1234,10 @@ mark,
       top: 0;
       z-index: 5;
       position: absolute; }
+      .keys .key-black span {
+        font-size: 1.5vw;
+        bottom: 0;
+        text-align: center; }
     .keys .key-white {
       top: 0;
       position: relative;
@@ -1243,6 +1246,11 @@ mark,
       margin-left: 0;
       height: 100%;
       background-color: white; }
+      .keys .key-white span {
+        bottom: 0;
+        font-size: 1.5vw;
+        position: absolute;
+        text-align: center; }
     .keys .key-60 {
       border-color: #8888ff;
       background-color: #ddddee;
