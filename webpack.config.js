@@ -29,7 +29,6 @@ const webpackConfig = (env, argv) => {
                     test: /\.(scss)$/,
                     use: [
                         development ? "style-loader" : MiniCssExtractPlugin.loader,
-                        // 'resolve-url-loader',
                         "css-loader", {
                             loader: "sass-loader",
                             options: {
@@ -72,7 +71,7 @@ const webpackConfig = (env, argv) => {
             publicPath: '/',
             filename: 'bundle.js'
         },
-        plugins: development?[
+        plugins: development ? [
             new webpack.HotModuleReplacementPlugin(),
             new webpack.NoEmitOnErrorsPlugin(),
             new HtmlWebpackPlugin({
@@ -81,7 +80,7 @@ const webpackConfig = (env, argv) => {
                     js: ["bundle.js"]
                 }
             })
-        ]:[
+        ] : [
             new webpack.NoEmitOnErrorsPlugin(),
             new MiniCssExtractPlugin("bundle.css"),
             new HtmlWebpackPlugin({
@@ -91,11 +90,9 @@ const webpackConfig = (env, argv) => {
                     js: ["bundle.js"]
                 }
             })
-        ]
-        ,
-
+        ],
         devtool: development ? 'source-map' : undefined,
-        devServer: {
+        devServer: development ? {
             contentBase: './dist',
             hot: true,
             // embed the webpack-dev-server runtime into the bundle
@@ -104,7 +101,7 @@ const webpackConfig = (env, argv) => {
             historyApiFallback: true,
             port: PORT,
             host: HOST,
-        },
+        } : undefined,
         // optimization:{
         //     // minimizer:[]
         // }
