@@ -143,6 +143,12 @@ const
 
 const octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
 const blackKeys= [1,3,6,8,10];
-
-export {C0,C1, C2, C3, C4, C5, C6,C7,C8, notes, octave,blackKeys};
+const noteModifiers={
+    sharp:'sharp',
+    flat:'flat'
+};
+const noteLengths={
+    quarter:1/4
+};
+export {C0,C1, C2, C3, C4, C5, C6,C7,C8, notes, octave,blackKeys,noteModifiers};
 

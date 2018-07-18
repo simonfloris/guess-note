@@ -9,19 +9,21 @@ import Feedback from "./Feedback";
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 const flatten = (arr) => arr.reduce((flat, next) => flat.concat(next), []);
 
-const gameStates={
-    init:'init',
-    playing:'playing',
+export const gameStates = {
+    init: 'init',
+    playing: 'playing',
+    waiting: 'waiting',
 };
 
 class App extends Component {
     state = {
         guessedNote: null,
-        note: null,
+        note: C3+1,
         startC: C2,
         octaveCount: 4,
         showKeyName: false,
-        gameState:gameStates.init,
+        gameState: gameStates.init,
+        automatic:true
     };
 
     async showOff() {
@@ -31,6 +33,22 @@ class App extends Component {
         }
         await sleep(200);
     }
+    onToggleAutomatic = (bool) => {
+          this.setState(prevState => ({automatic: !prevState.automatic}));
+    };
+
+    onSetStart = (note) => {
+        this.setState({startC: note});
+        this.initQuestion()
+
+    };
+    onSetRange = (val) => {
+        this.setState({octaveCount: val});
+        this.initQuestion()
+    };
+    onToggleShowKeyName = () => {
+        this.setState(prevState => ({showKeyName: !prevState.showKeyName}));
+    };
 
     componentDidMount() {
         this.showOff().then(this.initQuestion);
@@ -41,44 +59,68 @@ class App extends Component {
         return flatten([...Array(octaveCount)].map((_, octaveIndex) => [...Array(12)].map((_, keyIndex) => octaveIndex * 12 + keyIndex + startC)));
     }
 
+    onClick = () => {
+        if (this.state.gameState === gameStates.waiting) {
+            this.proceed()
+        }
+    };
+
     render() {
-        const {guessedNote, note, startC, octaveCount, showKeyName,gameState} = this.state;
+        const {guessedNote, note} = this.state;
         return (
-            <div className="app">
+            <div className="app" onClick={this.onClick}>
+                <div className="title"><h4>Rate die Note</h4></div>
                 <div className="upper">
-                <Settings {...this.state} onChange={this.onChange}/><Sheet note={note} guessedNote={guessedNote}/>
+                    <Settings {...this.state}
+                              onSetStart={this.onSetStart}
+                              onToggleShowKeyName={this.onToggleShowKeyName}
+                              onSetRange={this.onSetRange}
+                              onToggleAutomatic={this.onToggleAutomatic}
+                    />
+                    <Sheet
+                        {...this.state}
+                    />
                     <Feedback {...this.state} />
                 </div>
-                <Keys guessedNote={guessedNote} note={note} onGuess={this.onGuess} startC={startC} status={gameState}
-                      octaveCount={octaveCount} showKeyName={showKeyName}/>
-                {this.guessed() && <div className={'solution'}><Solve guessedNote={guessedNote} note={note}/></div>}
+                <Keys {...this.state}
+                      onGuess={this.onGuess}
+                />
+                {this.state.gameState===gameStates.waiting && <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>}
             </div>
         );
     }
 
-    guessed = () => this.state.guessedNote && this.state.gameState===gameStates.playing;
-
+    // guessed = () => {if(this.state.gameState===gameStates.waiting){debugger;}const guessed =  (this.state.guessedNote && (this.state.gameState === gameStates.waiting));console.log('guessed: '+guessed);return guessed;};
     initQuestion = () => {
+        console.log('new question');
         const {startC, octaveCount} = this.state;
-        // const max=(octaveCount * 12)+startC;
-        // const note =Math.max(((this.state.note+1)%(max)),startC);
-        let note = Math.floor(Math.random() * octaveCount * 12) + startC;
-        while (note > 81 || note < 40) {
-            note = Math.floor(Math.random() * octaveCount * 12) + startC;
-        }
+        const note = Math.floor(Math.random() * octaveCount * 12) + startC;
 
         this.setState({
             note: note,
             guessedNote: null,
             guessReact: null,
-            gameState:gameStates.playing
+            gameState: gameStates.playing
         })
 
     };
     onGuess = (key) => {
-        // console.log(notes[key].name);
-        this.setState({guessedNote: key});
-        setTimeout(this.initQuestion, 800);
+        console.log('guessing');
+        this.setState({guessedNote: key,gameState:gameStates.waiting});
+        if(this.state.automatic){setTimeout(this.proceed,1000)};
+    };
+
+    proceed=()=> {
+        const {gameState} = this.state;
+        console.log('proceeding');
+        switch (gameState) {
+            case gameStates.waiting:
+                this.initQuestion();
+                return;
+            default:
+                return;
+
+        }
     }
 }
 

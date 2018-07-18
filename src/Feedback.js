@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import {notes} from './constants';
+import {gameStates} from "./App";
 
 class Feedback extends Component {
     render() {
-        const{note}=this.props;
+        const{note,gameState,showKeyName}=this.props;
         return (
             <div className={'feedback'}>
-                {note && notes[note].name}
-                &nbsp;{note && note}
+                {gameState===gameStates.playing &&<div><h5>Drücke die richtige Taste auf dem Klavier</h5></div>}
+                {showKeyName&&  note && <span>{notes[note].name} / {notes[note].otherName}</span>}
+
             </div>
         );
     }

@@ -15,11 +15,12 @@ class Keys extends Component {
         return (
             <div className='keys'>
                 {[...Array(octaveCount)].map((val, index) => <Octave
-                    key={startC + (index * 12)} onGuess={onGuess}
+                    key={startC + (index * 12)}
                     startKey={startC + (index * 12)}
                     width={100 / octaveCount}
                     showKeyName={showKeyName}
                     guessedNote={guessedNote}
+                    onGuess={onGuess}
                     note={note}
                     />
                     )}

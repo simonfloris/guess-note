@@ -1,17 +1,25 @@
+$height: 56.25vw; // 16:9
+$upperHeight: 28.25vw;
+$titleHeight: 2vw;
+$margin:1vw;
+$lowerHeight: $height - $upperHeight - $titleHeight - ( $margin *2) ;
 
 body {
 
 }
 
 .app {
-  margin: 1vw;
-  width: 100vw;
-  height: 56.25vw;
+  margin: 0 $margin;
+  width: 100vw - ( 2 * $margin) ;
+  height: $height;
   position: relative;
+}
+.title{
+  height:2vw;
 }
 
 .upper {
-  height: 30.25vw;
+  height: $upperHeight;
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -19,21 +27,26 @@ body {
 }
 
 .settings {
-  width: 20%;
-  height: 30.25vw;
+  width: 30%;
+   height: $upperHeight;
+  display: flex;
+  align-items: center;
 }
 
 
 .keys {
-  width: 96vw;
-  height: 18vw;
+  width: 100%;
+  height: $lowerHeight;
 }
 
 
 .staffs {
   position: relative;
   width: 60%;
-  height: 30.25vw;
+  height: $upperHeight;
+  .lines,.head{
+    height: $upperHeight;
+  }
 }
 
 .feedback{

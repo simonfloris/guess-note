@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {blackKeys} from "./constants";
+import {lineWidth} from "./Sheet";
+import Modifier from "./Modifier";
 
 export const isBlackKey = (note) => {
     const octave = Math.floor(note - (note % 12));
@@ -8,22 +10,23 @@ export const isBlackKey = (note) => {
 
 const upperStaff = 60;
 const lowerStaff = 260;
-const lineWidth = 20;
+
 
 class Note extends Component {
     render() {
-        const {note, offset, modifierType} = this.props;
-        const {count, lineOffset, modifier} = this.helpLines();
+        const {note, offset, noteModifier, style} = this.props;
+        const {count, lineOffset, offsetModifier } = this.helpLines();
         const y = offset;
         const x = (-offset / 2) + 550;
         const clefOffset = {};
         return (
             <g>
-                <ellipse rx={13} ry={10} cx={x} cy={y}/>
-                {count > 0 && [...Array(count)].map((val, index) => <line key={index} x1={x - 18} x2={x + 18}
-                                                                          y1={y + index * modifier * lineWidth + lineOffset}
-                                                                          y2={y + index * modifier * lineWidth + lineOffset}
+                <ellipse rx={13} ry={10} cx={x} cy={y} {...style}/>
+                {count > 0 && [...Array(count)].map((val, index) => <line {...style} key={index} x1={x - 18} x2={x + 18}
+                                                                          y1={y + index * offsetModifier  * lineWidth + lineOffset}
+                                                                          y2={y + index * offsetModifier  * lineWidth + lineOffset}
                                                                           stroke="black" strokeWidth="1"/>)}
+                {noteModifier&& <Modifier x={x} y={y} type={noteModifier}/>}
             </g>
 
         );
@@ -33,7 +36,7 @@ class Note extends Component {
         const {note, offset} = this.props;
         let count = 0,
             lineOffset = 0,
-            modifier = 1;
+            offsetModifier = 1;
         if (note === 60) {
             count = 1;
         }
@@ -44,11 +47,9 @@ class Note extends Component {
         else if (offset > lowerStaff) {
             count = Math.floor((offset - lowerStaff) / lineWidth);
             lineOffset = -(offset + 20) % 20;
-            modifier = -1;
+            offsetModifier  = -1;
         }
-        console.log(count, lineOffset, modifier);
-
-        return {count, lineOffset, modifier};
+        return {count, lineOffset, offsetModifier };
 
     }
 }

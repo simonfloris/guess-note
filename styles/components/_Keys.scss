@@ -11,6 +11,7 @@
   }
 
   .key {
+     user-select: none;
     &-correct{
     background-color: #44bb44!important;
   }
@@ -47,7 +48,8 @@
       background-color: white;
     }
     &-60 {
-      border-color: #3333ff;
+      border-color: #8888ff;
+      background-color: #ddddee;
       //border-style: ridge;
       border-width: 2px;
     }

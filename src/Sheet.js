@@ -1,21 +1,21 @@
 import React, {Component} from 'react';
-import {notes, C0, C1, C2, C3, C4, C5, C6, C7, C8, blackKeys} from "./constants";
-import clef from './asssets/clef.svg';
-import bassClef from './asssets/bass-clef.svg';
+import {notes, C0, C1, C2, C3, C4, C5, C6, C7, C8, blackKeys, noteModifiers} from "./constants";
 import Staff from "./Staff";
 import Note, {isBlackKey} from "./Note";
+import {gameStates} from "./App";
 
-const octavOffset = 10*7;
+export const lineWidth = 20;
+const octaveOffset = 10 * 7;
 const offsets = {
-    [C0]: octavOffset * 4,
-    [C1]: octavOffset * 3,
-    [C2]: octavOffset * 2,
-    [C3]: octavOffset,
+    [C0]: octaveOffset * 4,
+    [C1]: octaveOffset * 3,
+    [C2]: octaveOffset * 2,
+    [C3]: octaveOffset,
     [C4]: 0,
-    [C5]: -octavOffset,
-    [C6]: -octavOffset * 2,
-    [C7]: -octavOffset * 3,
-    [C8]: -octavOffset * 4,
+    [C5]: -octaveOffset,
+    [C6]: -octaveOffset * 2,
+    [C7]: -octaveOffset * 3,
+    [C8]: -octaveOffset * 4,
 };
 export const offsetSharp = {
     0: 0,
@@ -51,37 +51,38 @@ class Sheet extends Component {
     //     ctx:null
     // };
 
-    offset = (note, modifier = 'sharp') => {
+    offset = (note, noteModifier = 'sharp') => {
         //get octave
         const octave = Math.floor(note - (note % 12));
-        return offsets[octave] - this.noteOffset(note - octave, isBlackKey);
-
+        return offsets[octave] - this.noteOffset(note - octave, noteModifier) + 160;
     };
 
-    noteOffset = (note, modifier = 'sharp') => {
+    noteOffset = (note, noteModifier = 'sharp') => {
         const offset = 10;
-        return isBlackKey === 'flat' ? offsetFlat[note] * offset : offsetSharp[note] * offset;
+        return noteModifier === noteModifiers.flat ? offsetFlat[note] * offset : offsetSharp[note] * offset;
     };
+
+    getModifierAndOffset(note) {
+        const blackKey = isBlackKey(note);
+        let noteModifier;
+        if (blackKey) {
+            const coin = Math.floor(Math.random() + 0.5);
+            noteModifier = coin ? noteModifiers.sharp : noteModifiers.flat;
+        }
+        return {offset: this.offset(note, noteModifier), noteModifier: noteModifier};
+    }
 
     render() {
-        const {note} = this.props;
-        const blackKey = isBlackKey(note);
-        let modifierType;
-        if (blackKey) {
-            const coin = Math.floor(Math.random() + 1);
-            modifierType = coin ? 'sharp' : 'flat';
-        }
-        const offset = this.offset(note, modifierType);
-        const modifierClass = blackKey ? ` ${modifierType}` : ' ';
-
+        const {note, guessedNote, gameState} = this.props;
         return (
             <div className='staffs'>
                 <div className='staff'>
-                    <img className='head clef' src={clef}/>
-                    <img className='head bassClef' src={bassClef}/>
-                    <Staff>{note && <Note offset={offset+160} note={note} modifierType={modifierType}/>}</Staff>
+                    <Staff>{note && <Note note={note} {...this.getModifierAndOffset(note)}/>}
+                        {guessedNote && gameState !== gameStates.init &&
+                        <Note note={guessedNote} {...this.getModifierAndOffset(guessedNote)}
+                              style={{fill: guessedNote === note ? 'green' : 'red'}}/>}
+                    </Staff>
                 </div>
-
             </div>);
     }
 
