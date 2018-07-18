@@ -15,9 +15,7 @@ class Key extends Component {
                       onMouseUp={(e) => {
                           e.stopPropagation();
                           e.preventDefault();
-                          if (!guessedNote) {
                               onGuess(keyNo)
-                          }
                       }}
                       className={className}><span>{showKeyName ? octave[keyNo%12] : ''}</span></span>);
     }

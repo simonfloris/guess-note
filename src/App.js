@@ -12,6 +12,7 @@ const flatten = (arr) => arr.reduce((flat, next) => flat.concat(next), []);
 export const gameStates = {
     init: 'init',
     playing: 'playing',
+    showResult: 'showResult',
     waiting: 'waiting',
 };
 
@@ -23,36 +24,68 @@ class App extends Component {
         octaveCount: 4,
         showKeyName: false,
         gameState: gameStates.init,
-        automatic:true
+        automatic: true,
+        maxTries: 1,
+        tries:0,
+        score:0,
     };
 
     async showOff() {
         for (const note of this.noteRange()) {
             this.setState({guessedNote: note, note: note});
-            await sleep(10);
+            await sleep(30);
         }
-        this.setState({guessedNote: null, note: null});
+        // this.setState({guessedNote: null, note: null});
         await sleep(200);
     }
+    onSetMaxTries=(val)=>{
+        this.setState({maxTries:val})
+    };
+
     onToggleAutomatic = () => {
-          this.setState(prevState => ({automatic: !prevState.automatic}));
+        this.setState(prevState => ({automatic: !prevState.automatic}));
     };
 
     onSetStart = (note) => {
-        this.setState({startC: note});
-        this.init()
+        this.setState({startC: note, gameState: gameStates.init});
 
     };
     onSetRange = (val) => {
         this.setState({octaveCount: val});
-        this.init()
     };
     onToggleShowKeyName = () => {
         this.setState(prevState => ({showKeyName: !prevState.showKeyName}));
     };
-    init(){
+
+    init() {
         this.showOff().then(this.initQuestion);
     }
+
+    componentDidUpdate(prevState) {
+        if (prevState.gameState && this.state.gameState !== prevState.gameState && this.gameState === gameStates.init) {
+            this.init();
+        }
+        if ( this.state.tries !== prevState.tries && this.gameState === gameStates.playing) {
+            this.checkGuess();
+        }
+          // if (this.state.automatic) {
+        //     setTimeout(this.proceed, 900)
+        // }
+    }
+    checkGuess=()=>{
+        if(this.state.guessedNote===this.state.note
+        || this.state.maxTries && this.state.tries===this.state.maxTries
+        ){
+            this.setState({gameState:gameStates.showResult});
+            if (this.state.automatic) {
+             setTimeout(this.proceed, 900)
+         }
+        }
+        //retry
+      else {
+
+        }
+    };
 
     componentDidMount() {
         this.init();
@@ -60,19 +93,19 @@ class App extends Component {
 
     noteRange() {
         const {octaveCount, startC} = this.state;
-        const allNotes= flatten([...Array(octaveCount)].map((_, octaveIndex) => [...Array(12)].map((_, keyIndex) => octaveIndex * 12 + keyIndex + startC)));
-        allNotes.push(allNotes[allNotes.length-1]+1);
+        const allNotes = flatten([...Array(octaveCount)].map((_, octaveIndex) => [...Array(12)].map((_, keyIndex) => octaveIndex * 12 + keyIndex + startC)));
+        allNotes.push(allNotes[allNotes.length - 1] + 1);
         return allNotes;
     }
 
     onClick = () => {
-        if (this.state.gameState === gameStates.waiting) {
+        if (this.state.gameState === gameStates.waiting || this.state.gameState===gameStates.showResult) {
             this.proceed()
         }
     };
 
     render() {
-        const {guessedNote, note,gameState} = this.state;
+        const {guessedNote, note, gameState} = this.state;
         return (
             <div className="app" onClick={this.onClick}>
                 <div className="title"><h4>Rate die Note</h4></div>
@@ -82,6 +115,7 @@ class App extends Component {
                               onToggleShowKeyName={this.onToggleShowKeyName}
                               onSetRange={this.onSetRange}
                               onToggleAutomatic={this.onToggleAutomatic}
+                              onSetTries={this.onSetMaxTries}
                     />
                     <Sheet
                         {...{note, guessedNote, gameState}}
@@ -89,10 +123,11 @@ class App extends Component {
                     <Feedback {...this.state} />
                 </div>
                 <Keys {...this.state}
-                    keyRange={this.noteRange()}
+                      keyRange={this.noteRange()}
                       onGuess={this.onGuess}
                 />
-                {this.state.gameState===gameStates.waiting && <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>}
+                {this.state.gameState === gameStates.waiting &&
+                <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>}
             </div>
         );
     }
@@ -107,21 +142,22 @@ class App extends Component {
             note: note,
             guessedNote: null,
             guessReact: null,
+            tries:0,
             gameState: gameStates.playing
         })
 
     };
     onGuess = (key) => {
         console.log('guessing');
-        this.setState({guessedNote: key,gameState:gameStates.waiting});
-        if(this.state.automatic){setTimeout(this.proceed,900)}
+        this.setState((prevState)=>({guessedNote: key,tries: prevState.tries+1,gameState: gameStates.waiting}));
+
     };
 
-    proceed=()=> {
+    proceed = () => {
         const {gameState} = this.state;
         console.log('proceeding');
         switch (gameState) {
-            case gameStates.waiting:
+            case gameStates.showResult:
                 this.initQuestion();
                 return;
             default:

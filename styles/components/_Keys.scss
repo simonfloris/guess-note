@@ -11,10 +11,10 @@
   }
 
   .key {
-     user-select: none;
-    &-correct{
-    background-color: #44bb44!important;
-  }
+    user-select: none;
+    &-correct {
+      background-color: #44bb44 !important;
+    }
     &:hover {
       background-color: grey;
     }
@@ -23,19 +23,22 @@
     border-radius: 0 0 5px 5px;
     font-size: 10px;
     text-align: center;
-    span {
-      position: absolute;
-    }
+
     &-black {
       background-color: black;
       color: white;
       height: 62%;
-      transform:translate(-59%, 0) scale(0.9,1);
+      transform: translate(-59%, 0) scale(0.9, 1);
       bottom: 2%;
       top: 0;
       z-index: 5;
       //margin: 0 5px;
       position: absolute;
+      span {
+        font-size: 1.5vw;
+        bottom: 0;
+        text-align: center;
+      }
     }
     &-white {
       top: 0;
@@ -45,6 +48,12 @@
       margin-left: 0;
       height: 100%;
       background-color: white;
+      span {
+        bottom: 0;
+        font-size: 1.5vw;
+        position: absolute;
+        text-align: center;
+      }
     }
     &-60 {
       border-color: #8888ff;

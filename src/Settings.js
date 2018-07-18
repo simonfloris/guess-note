@@ -3,22 +3,36 @@ import {C1, C2, C3, C4, C5, notes, octave} from "./constants";
 
 class Settings extends Component {
     render() {
-        const {onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount,automatic,onToggleAutomatic} = this.props;
+        const {onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount,automatic,onToggleAutomatic,tries,onSetTries} = this.props;
         return (
             <div className="settings">
                 <div>
-                    <div className="btn-group-vertical btn-group-justified">
+                     <div className="btn-group-vertical btn-group-justified tries">
+                        {/*<a href="#" role="button" className="btn btn-label btn-secondary" id="label-btn-tries"*/}
+                           {/*aria-disabled="true">Versuche</a>*/}
+                        {[
+                            [0,'\u221E'],
+                            [1,'1'],
+                            [2,'2'],
+                            [3,'3'],
+                            [4,'4'],
+                        ].map(([val,label]) => <button
+                            className={'btn btn-sm' + (tries === val? ' btn-success' : ' btn-primary')}
+                            key={val}
+                            onClick={() => onSetTries(val)}>{label}</button>)}
+                    </div>
+                    <div className="btn-group-vertical btn-group-justified start">
                         <a href="#" role="button" className="btn btn-label btn-secondary" id="label-btn-start"
-                           aria-disabled="true">C links</a>
-                        {[C1, C2, C3, C4, C5].map((note) => <button
+                           aria-disabled="true">von</a>
+                        {[C5, C4, C3, C2, C1].map((note) => <button
                             className={'btn btn-sm' + (startC === note ? ' btn-success' : ' btn-primary')}
                             key={note}
-                            onClick={() => onSetStart(note)}>{notes[note].name}</button>)}
+                            onClick={() => onSetStart(note)}>{notes[note].otherName}</button>)}
                     </div>
 
-                    <div className="btn-group-vertical btn-group-justified">
+                    <div className="btn-group-vertical btn-group-justified octaves">
                         <a href="#" role="button" className="btn btn-label btn-secondary" id="label-btn-range"
-                           aria-disabled="true">{'\u00A0<-->\u00A0'}</a>
+                           aria-disabled="true">{'<-->'}</a>
                         {[1, 2, 3, 4, 5].map((val) => <button
                             className={'btn btn-sm btn-flat' + (octaveCount === val ? ' btn-success' : ' btn-primary')}
                             key={val}
@@ -28,10 +42,10 @@ class Settings extends Component {
                  <div className="btn-group ">
 
                     <button className={'btn'+ (!showKeyName?' btn-secondary':' btn-success')}
-                            onClick={onToggleShowKeyName}>Notennamen {showKeyName ? '!' : '?'}
+                            onClick={onToggleShowKeyName}>Noten{showKeyName ? '!' : '?'}
                     </button>
                     <button className={'btn'+ (!automatic?' btn-secondary':' btn-success')}
-                            onClick={onToggleAutomatic}>direkt weiter{automatic ? '!' : '?'}</button>
+                            onClick={onToggleAutomatic}>ohne Pause{automatic ? '!' : '?'}</button>
                 </div>
             </div>
         );
@@ -41,3 +55,5 @@ class Settings extends Component {
 Settings.propTypes = {};
 
 export default Settings;
+
+// \u00A0 &nbsp;

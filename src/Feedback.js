@@ -4,11 +4,13 @@ import {gameStates} from "./App";
 
 class Feedback extends Component {
     render() {
-        const{note,gameState,showKeyName}=this.props;
+        const{note,gameState,showKeyName,score}=this.props;
         return (
+
             <div className={'feedback'}>
+                <h3>{score}</h3>
                 {gameState===gameStates.playing &&<div><h5>Drücke die richtige Taste auf dem Klavier</h5></div>}
-                {showKeyName&&  note && <span>{notes[note].name} / {notes[note].otherName}</span>}
+                {showKeyName&&  note && <span> {notes[note].otherName}</span>}
 
             </div>
         );

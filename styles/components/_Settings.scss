@@ -12,8 +12,10 @@
     padding:2%;
   }
 
-  .btn {
-    font-family: 'Nanum Gothic Coding',monospace;
+  a.btn {
+    font-family: 'Nanum Gothic Coding', monospace;
+  }
+    .btn{
     color: $white;
     padding: 0.1rem 0.25rem;
     font-size: 0.8rem;
