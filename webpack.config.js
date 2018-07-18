@@ -104,15 +104,6 @@ const webpackConfig = (env, argv) => {
             historyApiFallback: true,
             port: PORT,
             host: HOST,
-            proxy: {
-                '/nvz':{
-                    target:'https://nvztest.bnotk.de',
-                    changeOrigin:true,
-                    // auth:'external:external'
-                    auth:'tgoldland:exnO67AgMI'
-
-                }
-            }
         },
         // optimization:{
         //     // minimizer:[]

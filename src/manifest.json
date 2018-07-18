@@ -1,7 +1,7 @@
 {
-    "name": "",
-    "short_name": "",
-    "icons": [
+  "short_name": "Guess Note",
+  "name": "Guess Note",
+      "icons": [
         {
             "src": "/android-chrome-192x192.png",
             "sizes": "192x192",
@@ -13,7 +13,10 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone"
+
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
 }
