@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {notes, C0, C1, C2, C3, C4, C5, C6, C7, C8, blackKeys, noteModifiers} from "./constants";
 import Staff from "./Staff";
 import Note, {isBlackKey} from "./Note";
@@ -46,7 +46,7 @@ export const offsetFlat = {
     11: 6
 };
 
-class Sheet extends Component {
+class Sheet extends PureComponent {
     // state={
     //     ctx:null
     // };

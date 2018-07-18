@@ -66,7 +66,7 @@ class App extends Component {
     };
 
     render() {
-        const {guessedNote, note} = this.state;
+        const {guessedNote, note,gameState} = this.state;
         return (
             <div className="app" onClick={this.onClick}>
                 <div className="title"><h4>Rate die Note</h4></div>
@@ -78,7 +78,7 @@ class App extends Component {
                               onToggleAutomatic={this.onToggleAutomatic}
                     />
                     <Sheet
-                        {...this.state}
+                        {...{note, guessedNote, gameState}}
                     />
                     <Feedback {...this.state} />
                 </div>
