@@ -1,27 +1,35 @@
 .settings {
   display: flex;
   flex-direction: column;
-
-  justify-content: space-around;
+  justify-content: start;
   > div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    > *{
+
+    }
+
   }
-  .btn-group-vertical{
-    padding:2%;
+  #otherSettings .btn{
+      flex-grow: 1;
+  }
+
+  .btn-group-vertical, .btn-group {
+    padding: 2%;
+
   }
 
   a.btn {
     font-family: 'Nanum Gothic Coding', monospace;
   }
-    .btn{
+  .btn {
     color: $white;
     padding: 0.1rem 0.25rem;
     font-size: 0.8rem;
     line-height: 1.5;
     border-radius: 0.2rem;
-    &-label{
+    &-label {
       pointer-events: none;
     }
   }

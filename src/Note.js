@@ -5,7 +5,7 @@ import Modifier from "./Modifier";
 import {Motion, spring, StaggeredMotion} from "react-motion";
 
 const SPRING_CONFIG = {stiffness: 410, damping: 28};
-const WOBBLY_SPRING = {stiffness: 380, damping: 12};
+
 
 export const isBlackKey = (note) => {
     const octave = Math.floor(note - (note % 12));

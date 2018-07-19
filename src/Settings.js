@@ -44,7 +44,7 @@ class Settings extends Component {
                             onClick={() => onSetRange(val)}>{val}</button>)}
                     </div>
                 </div>
-                <div className="btn-group ">
+                <div className="btn-group" id="otherSettings">
 
                     <button className={'btn' + (!showKeyName ? ' btn-secondary' : ' btn-success')}
                             onClick={onToggleShowKeyName}>Noten{showKeyName ? '!' : '?'}

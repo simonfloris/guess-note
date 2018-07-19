@@ -1,13 +1,18 @@
 import React, {Component} from 'react';
 import Sheet from "./Sheet";
 import Keys from "./Keys";
-import {C1, C2, C3, C4, C5, C6, notes} from "./constants";
+import {C1, C2, C3, C4, C5, C6, noteModifiers, notes} from "./constants";
 import Solve from "./Solve";
 import Settings from "./Settings";
-import Feedback from "./Feedback";
+import Board from "./Board";
 
 export const sleep = ms => new Promise(res => setTimeout(res, ms));
 const flatten = (arr) => arr.reduce((flat, next) => flat.concat(next), []);
+
+function randomModifier() {
+    const coin = Math.floor(Math.random() + 0.5);
+    return coin ? noteModifiers.sharp : noteModifiers.flat;
+}
 
 export const gameStates = {
     init: 'init',
@@ -28,15 +33,14 @@ class App extends Component {
         maxTries: 1,
         tries: 0,
         score: 0,
+        noteModifier: noteModifiers.sharp,
     };
 
     async showOff() {
-        console.log('show me');
         for (const note of this.noteRange()) {
             this.setState({guessedNote: note, note: note});
             await sleep(10);
         }
-        // this.setState({guessedNote: null, note: null});
         await sleep(200);
     }
 
@@ -53,7 +57,7 @@ class App extends Component {
 
     };
     onSetRange = (val) => {
-        this.setState({octaveCount: val,gameState:gameStates.init});
+        this.setState({octaveCount: val, gameState: gameStates.init});
     };
     onToggleShowKeyName = () => {
         this.setState(prevState => ({showKeyName: !prevState.showKeyName}));
@@ -63,7 +67,7 @@ class App extends Component {
         this.showOff().then(this.initQuestion);
     }
 
-    componentDidUpdate(prevProps,prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (prevState.gameState
             && this.state.gameState !== prevState.gameState
             && this.state.gameState === gameStates.init) {
@@ -87,14 +91,16 @@ class App extends Component {
     };
 
     checkGuess = () => {
+        //score
         if (this.state.guessedNote === this.state.note) {
-            this.setState((prevState) => ({gameState: gameStates.showResult}));
+            this.setState((prevState) => ({score: prevState.score + 1, gameState: gameStates.showResult}));
             if (this.state.automatic) {
                 setTimeout(this.proceed, 900)
             }
         }
+        //fail
         else if (this.state.maxTries && (this.state.tries >= this.state.maxTries)) {
-            this.setState((prevState) => ({score: prevState.score + 1, gameState: gameStates.showResult}));
+            this.setState((prevState) => ({gameState: gameStates.showResult}));
             if (this.state.automatic) {
                 setTimeout(this.proceed, 900)
             }
@@ -123,10 +129,10 @@ class App extends Component {
     };
 
     render() {
-        const {guessedNote, note, gameState} = this.state;
+        const {guessedNote, note, gameState, noteModifier, showKeyName} = this.state;
         return (
             <div className="app" onClick={this.onClick}>
-                <div className="title"><h4>Rate die Note</h4></div>
+
                 <div className="upper">
                     <Settings {...this.state}
                               onSetStart={this.onSetStart}
@@ -136,24 +142,25 @@ class App extends Component {
                               onSetTries={this.onSetMaxTries}
                     />
                     <Sheet
-                        {...{note, guessedNote, gameState}}
+                        {...{note, guessedNote, gameState, noteModifier}}
                     />
-                    <Feedback {...this.state} />
+                    <Board {...this.state} />
+                    {this.state.gameState === gameStates.showResult &&
+                    <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>
+                    }
                 </div>
-                <Keys {...this.state}
+                <Keys showKeyName={showKeyName}
+                      note={note}
+                      guessedNote={guessedNote}
+                      gameState={gameState}
                       keyRange={this.noteRange()}
                       onGuess={this.onGuess}
 
                 />
-                {this.state.gameState === gameStates.showResult &&
-                <div className={'solutionWrapper'}><Solve guessedNote={guessedNote} note={note}/></div>}
-            </div>
-        );
+            </div>);
     }
 
-    // guessed = () => {if(this.state.gameState===gameStates.waiting){debugger;}const guessed =  (this.state.guessedNote && (this.state.gameState === gameStates.waiting));console.log('guessed: '+guessed);return guessed;};
     initQuestion = () => {
-        console.log('new question');
         const {startC, octaveCount} = this.state;
         const note = Math.floor(Math.random() * octaveCount * 12) + startC;
         this.setState({
@@ -161,7 +168,8 @@ class App extends Component {
             guessedNote: null,
             guessReact: null,
             tries: 0,
-            gameState: gameStates.playing
+            gameState: gameStates.playing,
+            noteModifier: randomModifier()
         })
 
     };
@@ -169,10 +177,9 @@ class App extends Component {
 
     proceed = () => {
         const {gameState} = this.state;
-        console.log('proceeding');
         switch (gameState) {
             case gameStates.init:
-                this.setState({gameState:gameStates.playing});
+                this.setState({gameState: gameStates.playing});
                 return;
             case gameStates.showResult:
                 this.initQuestion();

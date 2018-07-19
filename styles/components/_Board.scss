@@ -1,0 +1,36 @@
+.boardWrapper {
+     margin: 0 1vw 2vw 2vw;
+  .board {
+    >div{
+      height:33%;
+    }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1 1;
+    height: 100%;
+    color: $secondary;
+    //border: $secondary 1px solid;
+    //border-radius: 15%;
+    background-color: $white;
+    font-size: 2vw;
+    .score{
+      //font-size: 2vw;
+      font-weight: 600;
+      color:$primary;
+      vertical-align: text-top;
+      line-height: 0.5;
+      margin-bottom: 5vw;
+      //text-shadow: -1px -1px 1px $secondary,
+      //       0px 2px 1px $secondary;
+             //4px 4px 5px rgba(0,0,0,0.7),
+             //0px 0px 7px rgba(0,0,0,0.4);
+
+
+    }
+    .instruction{
+
+    }
+
+  }
+}

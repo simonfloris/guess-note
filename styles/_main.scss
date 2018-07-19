@@ -5,27 +5,29 @@ body {
 }
 
 .solutionWrapper {
-.solution {
   position: absolute;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  height: 100%;
+  right:0;
+  top: -2px;
+  width: 20%;
+.solution {
   text-align: center;
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   line-height: 80px;
-  top: 17%;
-  left: 69%;
-  width: 30%;
-  margin: 0 auto;
-  border-radius: 20px;
-  box-shadow: 2px 2px 2px #444;
+
   color: white;
   .right {
-    background-color: #44bb44;
+    background-color: $success;
+    box-shadow: 2px 2px 2px #888;
     border-radius: 20px;
-    box-shadow: 2px 2px 2px #444;
   }
   .wrong {
-    background-color: #995555;
+    background-color: rgb(198, 40, 40);
+    box-shadow: 2px 2px 2px #888;
     border-radius: 20px;
-    box-shadow: 2px 2px 2px #444;
   }
 }
 }
