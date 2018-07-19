@@ -1132,7 +1132,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 const SPRING_CONFIG = { stiffness: 410, damping: 28 };
-const WOBBLY_SPRING = { stiffness: 380, damping: 12 };
 
 const isBlackKey = note => {
     const octave = Math.floor(note - note % 12);
@@ -1208,8 +1207,49 @@ Note_Note.defaultProps = {
     }
 };
 /* harmony default export */ var src_Note = (Note_Note);
+// CONCATENATED MODULE: ./src/Title.js
+
+
+
+const WOBBLY_SPRING = { stiffness: 300, damping: 20 };
+const HARD_SPRING = { stiffness: 400, damping: 100 };
+const SMOOTH_SPRING = { stiffness: 254, damping: 20 };
+
+const Title = () => {
+
+    return react_default.a.createElement(
+        react_motion["Motion"],
+        {
+            defaultStyle: { top: 10, scale: 6, o: 0.7, r: 255, g: 0, b: 0 },
+            style: {
+                scale: Object(react_motion["spring"])(1, SMOOTH_SPRING),
+                o: Object(react_motion["spring"])(1, HARD_SPRING),
+                top: Object(react_motion["spring"])(0, WOBBLY_SPRING),
+                r: Object(react_motion["spring"])(2, WOBBLY_SPRING),
+                g: Object(react_motion["spring"])(136, WOBBLY_SPRING),
+                b: Object(react_motion["spring"])(209, WOBBLY_SPRING)
+            } },
+        iStyle => react_default.a.createElement(
+            "div",
+            { style: {
+                    color: `rgba(${iStyle.r},${iStyle.g},${iStyle.b},${iStyle.o})`,
+                    top: iStyle.top,
+                    transform: `scale(${iStyle.scale},${iStyle.scale})`
+                }, className: "title" },
+            react_default.a.createElement(
+                "h5",
+                null,
+                "Rate die Note"
+            )
+        )
+    );
+};
+
+/* harmony default export */ var src_Title = (Title);
+// rgb(1, 87, 155)
 // CONCATENATED MODULE: ./src/Sheet.js
 var Sheet_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 
 
 
@@ -1231,6 +1271,7 @@ const offsets = {
     [C8]: -octaveOffset * 4,
     [/* Cannot get final name for export "C9" in "./src/constants.js" (known exports: C0 C1 C2 C3 C4 C5 C6 C7 C8 notes octave blackKeys whiteKeys noteModifiers, known reexports: ) */ undefined]: -octaveOffset * 5
 };
+//position of Notes with sharps
 const offsetSharp = {
     0: 0,
     1: 0,
@@ -1246,6 +1287,7 @@ const offsetSharp = {
     11: 6,
     12: 7
 };
+//position of Notes in the Octave with flats
 const offsetFlat = {
     0: 0,
     1: 1,
@@ -1261,30 +1303,28 @@ const offsetFlat = {
     11: 6,
     12: 7
 };
+const octaveHeight = 160;
+const staffLineHeight = 20;
 
 class Sheet_Sheet extends react["PureComponent"] {
     constructor(...args) {
         var _temp;
 
-        return _temp = super(...args), this.offset = (note, noteModifier = 'sharp') => {
+        return _temp = super(...args), this.offset = (note, noteModifier = noteModifiers.sharp) => {
             //get octave
             const octave = Math.floor(note - note % 12);
-            return offsets[octave] - this.noteOffset(note - octave, noteModifier) + 160;
-        }, this.noteOffset = (note, noteModifier = 'sharp') => {
-            const offset = 10;
+            return offsets[octave] - this.noteOffset(note - octave, noteModifier) + octaveHeight;
+        }, this.noteOffset = (note, noteModifier = noteModifiers.sharp) => {
+            const offset = staffLineHeight / 2;
             return noteModifier === noteModifiers.flat ? offsetFlat[note] * offset : offsetSharp[note] * offset;
         }, _temp;
     }
-    // state={
-    //     ctx:null
-    // };
 
     getModifierAndOffset(note) {
         const blackKey = isBlackKey(note);
         let noteModifier;
         if (blackKey) {
-            const coin = Math.floor(Math.random() + 0.5);
-            noteModifier = coin ? noteModifiers.sharp : noteModifiers.flat;
+            noteModifier = this.props.noteModifier;
         }
         return { offset: this.offset(note, noteModifier), noteModifier: noteModifier };
     }
@@ -1294,6 +1334,7 @@ class Sheet_Sheet extends react["PureComponent"] {
         return react_default.a.createElement(
             "div",
             { className: "staffs" },
+            react_default.a.createElement(src_Title, null),
             react_default.a.createElement(
                 "div",
                 { className: "staff" },
@@ -1302,8 +1343,10 @@ class Sheet_Sheet extends react["PureComponent"] {
                     null,
                     note && react_default.a.createElement(src_Note, Sheet_extends({ note: note }, this.getModifierAndOffset(note))),
                     guessedNote && gameState !== gameStates.init && react_default.a.createElement(src_Note, Sheet_extends({ note: guessedNote }, this.getModifierAndOffset(guessedNote), {
-                        style: { fill: guessedNote === note ? 'green' : 'red',
-                            stroke: guessedNote === note ? 'green' : 'red' } }))
+                        style: {
+                            fill: guessedNote === note ? 'green' : 'red',
+                            stroke: guessedNote === note ? 'green' : 'red'
+                        } }))
                 )
             )
         );
@@ -1395,16 +1438,34 @@ Keys_Keys.defaultProps = {
 // CONCATENATED MODULE: ./src/Solve.js
 
 
+
+const Solve_WOBBLY_SPRING = { stiffness: 300, damping: 20 };
+const Solve_SMOOTH_SPRING = { stiffness: 254, damping: 20 };
+
 const Solve = ({ guessedNote, note }) => {
     const correct = guessedNote === note;
     const text = correct ? 'Jaaaa' : 'Neeee';
     return react_default.a.createElement(
-        'div',
-        { className: 'solution' },
-        react_default.a.createElement(
+        react_motion["Motion"],
+        {
+            defaultStyle: { opacity: 0, scale: 0, right: 78 },
+            style: {
+                scale: Object(react_motion["spring"])(1, Solve_WOBBLY_SPRING),
+                opacity: Object(react_motion["spring"])(1, Solve_WOBBLY_SPRING),
+                right: Object(react_motion["spring"])(0, Solve_SMOOTH_SPRING)
+            } },
+        iStyle => react_default.a.createElement(
             'div',
-            { className: correct ? 'right' : 'wrong' },
-            text
+            { className: 'solution', style: {
+                    right: iStyle.right,
+                    opacity: iStyle.opacity,
+                    transform: `scale(${iStyle.scale},${iStyle.scale})`
+                } },
+            react_default.a.createElement(
+                'div',
+                { className: correct ? 'right' : 'wrong' },
+                text
+            )
         )
     );
 };
@@ -1484,7 +1545,7 @@ class Settings_Settings extends react["Component"] {
             ),
             react_default.a.createElement(
                 "div",
-                { className: "btn-group " },
+                { className: "btn-group", id: "otherSettings" },
                 react_default.a.createElement(
                     "button",
                     { className: 'btn' + (!showKeyName ? ' btn-secondary' : ' btn-success'),
@@ -1509,44 +1570,52 @@ Settings_Settings.propTypes = {};
 /* harmony default export */ var src_Settings = (Settings_Settings);
 
 // \u00A0 &nbsp;
-// CONCATENATED MODULE: ./src/Feedback.js
+// CONCATENATED MODULE: ./src/Board.js
 
 
 
 
-class Feedback_Feedback extends react["Component"] {
+class Board_Board extends react["Component"] {
     render() {
         const { note, gameState, showKeyName, score } = this.props;
         return react_default.a.createElement(
             'div',
-            { className: 'feedback' },
+            { className: 'boardWrapper' },
             react_default.a.createElement(
-                'h3',
-                null,
-                score
-            ),
-            gameState === gameStates.playing && react_default.a.createElement(
                 'div',
-                null,
+                { className: 'board' },
                 react_default.a.createElement(
-                    'h5',
+                    'h2',
+                    { className: 'score' },
+                    score
+                ),
+                react_default.a.createElement(
+                    'div',
                     null,
-                    'Dr\xFCcke die richtige Taste auf dem Klavier'
+                    gameState === gameStates.playing && react_default.a.createElement(
+                        'h6',
+                        null,
+                        'Dr\xFCcke die richtige Taste auf dem Klavier'
+                    )
+                ),
+                react_default.a.createElement(
+                    'div',
+                    null,
+                    showKeyName && note && react_default.a.createElement(
+                        'span',
+                        null,
+                        ' ',
+                        notes[note].otherName
+                    )
                 )
-            ),
-            showKeyName && note && react_default.a.createElement(
-                'span',
-                null,
-                ' ',
-                notes[note].otherName
             )
         );
     }
 }
 
-Feedback_Feedback.propTypes = {};
+Board_Board.propTypes = {};
 
-/* harmony default export */ var src_Feedback = (Feedback_Feedback);
+/* harmony default export */ var src_Board = (Board_Board);
 // CONCATENATED MODULE: ./src/App.js
 var App_extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -1562,6 +1631,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const sleep = ms => new Promise(res => setTimeout(res, ms));
 const flatten = arr => arr.reduce((flat, next) => flat.concat(next), []);
+
+function randomModifier() {
+    const coin = Math.floor(Math.random() + 0.5);
+    return coin ? noteModifiers.sharp : noteModifiers.flat;
+}
 
 const gameStates = {
     init: 'init',
@@ -1584,7 +1658,8 @@ class App_App extends react["Component"] {
             automatic: true,
             maxTries: 1,
             tries: 0,
-            score: 0
+            score: 0,
+            noteModifier: noteModifiers.sharp
         }, this.onSetMaxTries = val => {
             this.setState({ maxTries: val });
         }, this.onToggleAutomatic = () => {
@@ -1604,27 +1679,29 @@ class App_App extends react["Component"] {
                 }));
             }
         }, this.checkGuess = () => {
+            //score
             if (this.state.guessedNote === this.state.note) {
-                this.setState(prevState => ({ gameState: gameStates.showResult }));
-                if (this.state.automatic) {
-                    setTimeout(this.proceed, 900);
-                }
-            } else if (this.state.maxTries && this.state.tries >= this.state.maxTries) {
                 this.setState(prevState => ({ score: prevState.score + 1, gameState: gameStates.showResult }));
                 if (this.state.automatic) {
                     setTimeout(this.proceed, 900);
                 }
             }
-            //retry in update
-            else {
-                    this.setState({ gameState: gameStates.playing });
+            //fail
+            else if (this.state.maxTries && this.state.tries >= this.state.maxTries) {
+                    this.setState(prevState => ({ gameState: gameStates.showResult }));
+                    if (this.state.automatic) {
+                        setTimeout(this.proceed, 900);
+                    }
                 }
+                //retry in update
+                else {
+                        this.setState({ gameState: gameStates.playing });
+                    }
         }, this.onClick = () => {
             if (this.state.gameState === gameStates.waiting || this.state.gameState === gameStates.showResult) {
                 this.proceed();
             }
         }, this.initQuestion = () => {
-            console.log('new question');
             const { startC, octaveCount } = this.state;
             const note = Math.floor(Math.random() * octaveCount * 12) + startC;
             this.setState({
@@ -1632,11 +1709,11 @@ class App_App extends react["Component"] {
                 guessedNote: null,
                 guessReact: null,
                 tries: 0,
-                gameState: gameStates.playing
+                gameState: gameStates.playing,
+                noteModifier: randomModifier()
             });
         }, this.proceed = () => {
             const { gameState } = this.state;
-            console.log('proceeding');
             switch (gameState) {
                 case gameStates.init:
                     this.setState({ gameState: gameStates.playing });
@@ -1656,12 +1733,10 @@ class App_App extends react["Component"] {
         var _this = this;
 
         return _asyncToGenerator(function* () {
-            console.log('show me');
             for (const note of _this.noteRange()) {
                 _this.setState({ guessedNote: note, note: note });
                 yield sleep(10);
             }
-            // this.setState({guessedNote: null, note: null});
             yield sleep(200);
         })();
     }
@@ -1691,19 +1766,10 @@ class App_App extends react["Component"] {
     }
 
     render() {
-        const { guessedNote, note, gameState } = this.state;
+        const { guessedNote, note, gameState, noteModifier, showKeyName } = this.state;
         return react_default.a.createElement(
             "div",
             { className: "app", onClick: this.onClick },
-            react_default.a.createElement(
-                "div",
-                { className: "title" },
-                react_default.a.createElement(
-                    "h4",
-                    null,
-                    "Rate die Note"
-                )
-            ),
             react_default.a.createElement(
                 "div",
                 { className: "upper" },
@@ -1714,23 +1780,25 @@ class App_App extends react["Component"] {
                     onToggleAutomatic: this.onToggleAutomatic,
                     onSetTries: this.onSetMaxTries
                 })),
-                react_default.a.createElement(src_Sheet, { note, guessedNote, gameState }),
-                react_default.a.createElement(src_Feedback, this.state)
+                react_default.a.createElement(src_Sheet, { note, guessedNote, gameState, noteModifier }),
+                react_default.a.createElement(src_Board, this.state),
+                this.state.gameState === gameStates.showResult && react_default.a.createElement(
+                    "div",
+                    { className: 'solutionWrapper' },
+                    react_default.a.createElement(src_Solve, { guessedNote: guessedNote, note: note })
+                )
             ),
-            react_default.a.createElement(src_Keys, App_extends({}, this.state, {
+            react_default.a.createElement(src_Keys, { showKeyName: showKeyName,
+                note: note,
+                guessedNote: guessedNote,
+                gameState: gameState,
                 keyRange: this.noteRange(),
                 onGuess: this.onGuess
 
-            })),
-            this.state.gameState === gameStates.showResult && react_default.a.createElement(
-                "div",
-                { className: 'solutionWrapper' },
-                react_default.a.createElement(src_Solve, { guessedNote: guessedNote, note: note })
-            )
+            })
         );
     }
 
-    // guessed = () => {if(this.state.gameState===gameStates.waiting){debugger;}const guessed =  (this.state.guessedNote && (this.state.gameState === gameStates.waiting));console.log('guessed: '+guessed);return guessed;};
 }
 
 /* harmony default export */ var src_App = (App_App);
