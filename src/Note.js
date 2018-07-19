@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {blackKeys} from "./constants";
+import {blackKeys, noteModifiers} from "./constants";
 import {lineWidth} from "./Sheet";
 import Modifier from "./Modifier";
 import {Motion, spring, StaggeredMotion} from "react-motion";
@@ -59,26 +59,29 @@ class Note extends Component {
     }
 
     helpLines = () => {
-        const {note, offset} = this.props;
+        const {note, offset,noteModifier} = this.props;
         let count = 0,
             lineOffset = 0,
             offsetModifier = 1;
-        if (note === 60) {
+        if (note === 60 ||
+            noteModifier===noteModifiers.sharp && note === 61) {
             count = 1;
         }
         else if (note > 80) {
             count = Math.floor((upperStaff - offset) / lineWidth);
-            lineOffset = (offset + 20) % 20;
+            lineOffset = mod((offset + 20), 20);
         }
         else if (offset > lowerStaff) {
             count = Math.floor((offset - lowerStaff) / lineWidth);
-            lineOffset = -(offset + 20) % 20;
+            lineOffset = -mod((offset + 20), 20);
             offsetModifier = -1;
         }
         return {count, lineOffset, offsetModifier};
 
     };
 }
-
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
 
 export default Note;

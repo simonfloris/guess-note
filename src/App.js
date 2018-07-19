@@ -100,7 +100,7 @@ class App extends Component {
         }
         //fail
         else if (this.state.maxTries && (this.state.tries >= this.state.maxTries)) {
-            this.setState((prevState) => ({gameState: gameStates.showResult}));
+            this.setState({gameState: gameStates.showResult});
             if (this.state.automatic) {
                 setTimeout(this.proceed, 900)
             }

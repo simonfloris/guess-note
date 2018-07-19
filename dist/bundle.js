@@ -1146,18 +1146,18 @@ class Note_Note extends react["Component"] {
         var _temp;
 
         return _temp = super(...args), this.helpLines = () => {
-            const { note, offset } = this.props;
+            const { note, offset, noteModifier } = this.props;
             let count = 0,
                 lineOffset = 0,
                 offsetModifier = 1;
-            if (note === 60) {
+            if (note === 60 || noteModifier === noteModifiers.sharp && note === 61) {
                 count = 1;
             } else if (note > 80) {
                 count = Math.floor((upperStaff - offset) / lineWidth);
-                lineOffset = (offset + 20) % 20;
+                lineOffset = mod(offset + 20, 20);
             } else if (offset > lowerStaff) {
                 count = Math.floor((offset - lowerStaff) / lineWidth);
-                lineOffset = -(offset + 20) % 20;
+                lineOffset = -mod(offset + 20, 20);
                 offsetModifier = -1;
             }
             return { count, lineOffset, offsetModifier };
@@ -1199,13 +1199,16 @@ class Note_Note extends react["Component"] {
     }
 
 }
-
 Note_Note.defaultProps = {
     style: {
         stroke: '#000',
         fill: '#000'
     }
 };
+function mod(n, m) {
+    return (n % m + m) % m;
+}
+
 /* harmony default export */ var src_Note = (Note_Note);
 // CONCATENATED MODULE: ./src/Title.js
 
@@ -1478,7 +1481,7 @@ class Settings_Settings extends react["Component"] {
     render() {
         const { onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic, maxTries, tries, onSetTries } = this.props;
         const validRanges = [1, 2, 3, 4, 5].filter(range => startC + range * 12 < 126);
-        const validStarts = [C5, C4, C3, C2, C1].filter(start => start + octaveCount * 12 < 126);
+        const validStarts = [C5, C4, C3, C2, C1].filter(start => start + octaveCount * 12 < 108);
         return react_default.a.createElement(
             "div",
             { className: "settings" },
@@ -1688,7 +1691,7 @@ class App_App extends react["Component"] {
             }
             //fail
             else if (this.state.maxTries && this.state.tries >= this.state.maxTries) {
-                    this.setState(prevState => ({ gameState: gameStates.showResult }));
+                    this.setState({ gameState: gameStates.showResult });
                     if (this.state.automatic) {
                         setTimeout(this.proceed, 900);
                     }
