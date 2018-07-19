@@ -31,9 +31,10 @@ class App extends Component {
     };
 
     async showOff() {
+        console.log('show me');
         for (const note of this.noteRange()) {
             this.setState({guessedNote: note, note: note});
-            await sleep(30);
+            await sleep(10);
         }
         // this.setState({guessedNote: null, note: null});
         await sleep(200);
@@ -52,7 +53,7 @@ class App extends Component {
 
     };
     onSetRange = (val) => {
-        this.setState({octaveCount: val});
+        this.setState({octaveCount: val,gameState:gameStates.init});
     };
     onToggleShowKeyName = () => {
         this.setState(prevState => ({showKeyName: !prevState.showKeyName}));
@@ -62,29 +63,37 @@ class App extends Component {
         this.showOff().then(this.initQuestion);
     }
 
-    componentDidUpdate(prevState) {
-        if (prevState.gameState && this.state.gameState !== prevState.gameState && this.gameState === gameStates.init) {
+    componentDidUpdate(prevProps,prevState) {
+        if (prevState.gameState
+            && this.state.gameState !== prevState.gameState
+            && this.state.gameState === gameStates.init) {
+            console.log('init');
             this.init();
         }
-        if (this.state.tries !== prevState.tries && this.state.gameState === gameStates.waiting) {
+        else if (this.state.tries !== prevState.tries
+            && this.state.gameState === gameStates.waiting) {
             this.checkGuess();
         }
     }
 
     onGuess = (key) => {
-        if(this.state.gameState===gameStates.playing) {
+        if (this.state.gameState === gameStates.playing) {
             this.setState((prevState) => ({
                 guessedNote: key,
                 tries: prevState.tries + 1,
                 gameState: gameStates.waiting
             }));
         }
-
     };
+
     checkGuess = () => {
-        if ((this.state.guessedNote === this.state.note)
-            || this.state.maxTries && (this.state.tries >= this.state.maxTries)
-        ) {
+        if (this.state.guessedNote === this.state.note) {
+            this.setState((prevState) => ({gameState: gameStates.showResult}));
+            if (this.state.automatic) {
+                setTimeout(this.proceed, 900)
+            }
+        }
+        else if (this.state.maxTries && (this.state.tries >= this.state.maxTries)) {
             this.setState((prevState) => ({score: prevState.score + 1, gameState: gameStates.showResult}));
             if (this.state.automatic) {
                 setTimeout(this.proceed, 900)
@@ -147,7 +156,6 @@ class App extends Component {
         console.log('new question');
         const {startC, octaveCount} = this.state;
         const note = Math.floor(Math.random() * octaveCount * 12) + startC;
-
         this.setState({
             note: note,
             guessedNote: null,
@@ -163,9 +171,13 @@ class App extends Component {
         const {gameState} = this.state;
         console.log('proceeding');
         switch (gameState) {
+            case gameStates.init:
+                this.setState({gameState:gameStates.playing});
+                return;
             case gameStates.showResult:
                 this.initQuestion();
                 return;
+
             default:
                 return;
 

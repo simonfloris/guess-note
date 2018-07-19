@@ -131,7 +131,7 @@ const notes = {
     0: {organKey: null, pianoKey: null, freq: 8.18},
 };
 const
-    C0=12,
+    C0 = 12,
     C1 = 24,
     C2 = 36,
     C3 = 48,
@@ -139,17 +139,18 @@ const
     C5 = 72,
     C6 = 84,
     C7 = 96,
-    C8 = 108;
+    C8 = 108,
+    C9 = 120;
 
 const octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
-const blackKeys= [1,3,6,8,10];
-const whiteKeys= [0,2,4,5,7,9,11];
-const noteModifiers={
-    sharp:'sharp',
-    flat:'flat'
+const blackKeys = [1, 3, 6, 8, 10];
+const whiteKeys = [0, 2, 4, 5, 7, 9, 11];
+const noteModifiers = {
+    sharp: 'sharp',
+    flat: 'flat'
 };
-const noteLengths={
-    quarter:1/4
+const noteLengths = {
+    quarter: 1 / 4
 };
-export {C0,C1, C2, C3, C4, C5, C6,C7,C8, notes, octave,blackKeys,whiteKeys,noteModifiers};
+export {C0, C1, C2, C3, C4, C5, C6, C7, C8, notes, octave, blackKeys, whiteKeys, noteModifiers};
 

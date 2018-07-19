@@ -7,7 +7,9 @@ import {gameStates} from "./App";
 class Key extends Component {
     render() {
         const {keyNo, keyType, onGuess, width, showKeyName, note, guessedNote, gameState} = this.props;
-        const className = `key key-${keyType}${(guessedNote && (gameState === gameStates.showResult || gameStates.init) && keyNo === note) ? ' key-correct' : ''} key-${keyNo}`;
+        const className = `key key-${keyType}${(guessedNote && (gameState === gameStates.showResult || gameState === gameStates.init) && keyNo === note) ?
+            ' key-correct' : 
+            ''} key-${keyNo}`;
         const styleWidth = keyType === keyTypes.white ? `${width}%` : `${width}%`;
         return (<span style={{width: styleWidth}}
                       onClick={e => {

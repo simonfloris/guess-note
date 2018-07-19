@@ -1023,7 +1023,8 @@ const C0 = 12,
       C5 = 72,
       C6 = 84,
       C7 = 96,
-      C8 = 108;
+      C8 = 108,
+      C9 = 120;
 
 const constants_octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
 const blackKeys = [1, 3, 6, 8, 10];
@@ -1129,6 +1130,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
+
 const SPRING_CONFIG = { stiffness: 410, damping: 28 };
 const WOBBLY_SPRING = { stiffness: 380, damping: 12 };
 
@@ -1175,12 +1177,20 @@ class Note_Note extends react["Component"] {
             react_motion["Motion"],
             {
                 defaultStyle: { x: x + Math.random() * 20 - 10, y: y - 30, rx: rx + 10, ry: ry + 10 },
-                style: { x: Object(react_motion["spring"])(x, _extends({}, SPRING_CONFIG)), y: Object(react_motion["spring"])(y, _extends({}, SPRING_CONFIG)), rx: Object(react_motion["spring"])(ry, _extends({}, SPRING_CONFIG)), ry: Object(react_motion["spring"])(ry, _extends({}, SPRING_CONFIG)) } },
+                style: {
+                    x: Object(react_motion["spring"])(x, _extends({}, SPRING_CONFIG)),
+                    y: Object(react_motion["spring"])(y, _extends({}, SPRING_CONFIG)),
+                    rx: Object(react_motion["spring"])(ry, _extends({}, SPRING_CONFIG)),
+                    ry: Object(react_motion["spring"])(ry, _extends({}, SPRING_CONFIG))
+                } },
             interpolatedStyle => react_default.a.createElement(
                 "g",
                 null,
-                react_default.a.createElement("ellipse", _extends({ rx: interpolatedStyle.rx, ry: interpolatedStyle.ry, cx: interpolatedStyle.x, cy: interpolatedStyle.y }, style)),
-                count > 0 && [...Array(count)].map((val, index) => react_default.a.createElement("line", _extends({}, style, { key: index, x1: interpolatedStyle.x - 20, x2: interpolatedStyle.x + 20,
+                react_default.a.createElement("ellipse", _extends({ rx: interpolatedStyle.rx, ry: interpolatedStyle.ry, cx: interpolatedStyle.x,
+                    cy: interpolatedStyle.y }, style)),
+                count > 0 && [...Array(count)].map((val, index) => react_default.a.createElement("line", _extends({}, style, { key: index,
+                    x1: interpolatedStyle.x - 20,
+                    x2: interpolatedStyle.x + 20,
                     y1: y + index * offsetModifier * lineWidth + lineOffset,
                     y2: y + index * offsetModifier * lineWidth + lineOffset
                 }, style, { strokeWidth: "1" }))),
@@ -1218,7 +1228,8 @@ const offsets = {
     [C5]: -octaveOffset,
     [C6]: -octaveOffset * 2,
     [C7]: -octaveOffset * 3,
-    [C8]: -octaveOffset * 4
+    [C8]: -octaveOffset * 4,
+    [/* Cannot get final name for export "C9" in "./src/constants.js" (known exports: C0 C1 C2 C3 C4 C5 C6 C7 C8 notes octave blackKeys whiteKeys noteModifiers, known reexports: ) */ undefined]: -octaveOffset * 5
 };
 const offsetSharp = {
     0: 0,
@@ -1232,7 +1243,8 @@ const offsetSharp = {
     8: 4,
     9: 5,
     10: 5,
-    11: 6
+    11: 6,
+    12: 7
 };
 const offsetFlat = {
     0: 0,
@@ -1246,7 +1258,8 @@ const offsetFlat = {
     8: 5,
     9: 5,
     10: 6,
-    11: 6
+    11: 6,
+    12: 7
 };
 
 class Sheet_Sheet extends react["PureComponent"] {
@@ -1309,7 +1322,7 @@ class Sheet_Sheet extends react["PureComponent"] {
 class Key_Key extends react["Component"] {
     render() {
         const { keyNo, keyType, onGuess, width, showKeyName, note, guessedNote, gameState } = this.props;
-        const className = `key key-${keyType}${guessedNote && (gameState === gameStates.showResult || gameStates.init) && keyNo === note ? ' key-correct' : ''} key-${keyNo}`;
+        const className = `key key-${keyType}${guessedNote && (gameState === gameStates.showResult || gameState === gameStates.init) && keyNo === note ? ' key-correct' : ''} key-${keyNo}`;
         const styleWidth = keyType === keyTypes.white ? `${width}%` : `${width}%`;
         return react_default.a.createElement(
             "span",
@@ -1334,7 +1347,6 @@ class Key_Key extends react["Component"] {
 
 /* harmony default export */ var src_Key = (Key_Key);
 // CONCATENATED MODULE: ./src/Keys.js
-
 
 
 
@@ -1404,6 +1416,8 @@ const Solve = ({ guessedNote, note }) => {
 class Settings_Settings extends react["Component"] {
     render() {
         const { onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic, maxTries, tries, onSetTries } = this.props;
+        const validRanges = [1, 2, 3, 4, 5].filter(range => startC + range * 12 < 126);
+        const validStarts = [C5, C4, C3, C2, C1].filter(start => start + octaveCount * 12 < 126);
         return react_default.a.createElement(
             "div",
             { className: "settings" },
@@ -1424,6 +1438,7 @@ class Settings_Settings extends react["Component"] {
                         {
                             className: 'btn btn-sm' + (maxTries === val ? ' btn-success' : ' btn-primary'),
                             key: val,
+
                             onClick: () => onSetTries(val) },
                         tries && maxTries !== 1 && maxTries === val ? `${tries}/${label}` : label
                     ))
@@ -1441,6 +1456,7 @@ class Settings_Settings extends react["Component"] {
                         "button",
                         {
                             className: 'btn btn-sm' + (startC === note ? ' btn-success' : ' btn-primary'),
+                            disabled: !validStarts.includes(note),
                             key: note,
                             onClick: () => onSetStart(note) },
                         notes[note].otherName
@@ -1460,6 +1476,7 @@ class Settings_Settings extends react["Component"] {
                         {
                             className: 'btn btn-sm btn-flat' + (octaveCount === val ? ' btn-success' : ' btn-primary'),
                             key: val,
+                            disabled: !validRanges.includes(val),
                             onClick: () => onSetRange(val) },
                         val
                     ))
@@ -1575,7 +1592,7 @@ class App_App extends react["Component"] {
         }, this.onSetStart = note => {
             this.setState({ startC: note, gameState: gameStates.init });
         }, this.onSetRange = val => {
-            this.setState({ octaveCount: val });
+            this.setState({ octaveCount: val, gameState: gameStates.init });
         }, this.onToggleShowKeyName = () => {
             this.setState(prevState => ({ showKeyName: !prevState.showKeyName }));
         }, this.onGuess = key => {
@@ -1587,7 +1604,12 @@ class App_App extends react["Component"] {
                 }));
             }
         }, this.checkGuess = () => {
-            if (this.state.guessedNote === this.state.note || this.state.maxTries && this.state.tries >= this.state.maxTries) {
+            if (this.state.guessedNote === this.state.note) {
+                this.setState(prevState => ({ gameState: gameStates.showResult }));
+                if (this.state.automatic) {
+                    setTimeout(this.proceed, 900);
+                }
+            } else if (this.state.maxTries && this.state.tries >= this.state.maxTries) {
                 this.setState(prevState => ({ score: prevState.score + 1, gameState: gameStates.showResult }));
                 if (this.state.automatic) {
                     setTimeout(this.proceed, 900);
@@ -1605,7 +1627,6 @@ class App_App extends react["Component"] {
             console.log('new question');
             const { startC, octaveCount } = this.state;
             const note = Math.floor(Math.random() * octaveCount * 12) + startC;
-
             this.setState({
                 note: note,
                 guessedNote: null,
@@ -1617,9 +1638,13 @@ class App_App extends react["Component"] {
             const { gameState } = this.state;
             console.log('proceeding');
             switch (gameState) {
+                case gameStates.init:
+                    this.setState({ gameState: gameStates.playing });
+                    return;
                 case gameStates.showResult:
                     this.initQuestion();
                     return;
+
                 default:
                     return;
 
@@ -1631,9 +1656,10 @@ class App_App extends react["Component"] {
         var _this = this;
 
         return _asyncToGenerator(function* () {
+            console.log('show me');
             for (const note of _this.noteRange()) {
                 _this.setState({ guessedNote: note, note: note });
-                yield sleep(30);
+                yield sleep(10);
             }
             // this.setState({guessedNote: null, note: null});
             yield sleep(200);
@@ -1644,11 +1670,11 @@ class App_App extends react["Component"] {
         this.showOff().then(this.initQuestion);
     }
 
-    componentDidUpdate(prevState) {
-        if (prevState.gameState && this.state.gameState !== prevState.gameState && this.gameState === gameStates.init) {
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.gameState && this.state.gameState !== prevState.gameState && this.state.gameState === gameStates.init) {
+            console.log('init');
             this.init();
-        }
-        if (this.state.tries !== prevState.tries && this.state.gameState === gameStates.waiting) {
+        } else if (this.state.tries !== prevState.tries && this.state.gameState === gameStates.waiting) {
             this.checkGuess();
         }
     }

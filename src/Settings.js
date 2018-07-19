@@ -4,6 +4,8 @@ import {C1, C2, C3, C4, C5, notes, octave} from "./constants";
 class Settings extends Component {
     render() {
         const {onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic, maxTries,tries, onSetTries} = this.props;
+        const validRanges=[1, 2, 3, 4, 5].filter(range=>(startC+range*12)<126);
+        const validStarts=[C5, C4, C3, C2, C1].filter(start=>(start+octaveCount*12)<126);
         return (
             <div className="settings">
                 <div>
@@ -19,6 +21,7 @@ class Settings extends Component {
                         ].map(([val, label]) => <button
                             className={'btn btn-sm' + (maxTries === val ? ' btn-success' : ' btn-primary')}
                             key={val}
+
                             onClick={() => onSetTries(val)}>{tries&&maxTries!==1&&maxTries===val?`${tries}/${label}`:label}</button>)}
                     </div>
                     <div className="btn-group-vertical btn-group-justified start">
@@ -26,8 +29,9 @@ class Settings extends Component {
                            aria-disabled="true">von</a>
                         {[C5, C4, C3, C2, C1].map((note) => <button
                             className={'btn btn-sm' + (startC === note ? ' btn-success' : ' btn-primary')}
+                            disabled={!validStarts.includes(note)}
                             key={note}
-                            onClick={() => onSetStart(note)}>{notes[note].otherName}</button>)}
+                            onClick={() =>  onSetStart(note)}>{notes[note].otherName}</button>)}
                     </div>
 
                     <div className="btn-group-vertical btn-group-justified octaves">
@@ -36,6 +40,7 @@ class Settings extends Component {
                         {[1, 2, 3, 4, 5].map((val) => <button
                             className={'btn btn-sm btn-flat' + (octaveCount === val ? ' btn-success' : ' btn-primary')}
                             key={val}
+                            disabled={!validRanges.includes(val)}
                             onClick={() => onSetRange(val)}>{val}</button>)}
                     </div>
                 </div>

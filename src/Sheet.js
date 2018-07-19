@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {notes, C0, C1, C2, C3, C4, C5, C6, C7, C8, blackKeys, noteModifiers} from "./constants";
+import {notes, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, blackKeys, noteModifiers} from "./constants";
 import Staff from "./Staff";
 import Note, {isBlackKey} from "./Note";
 import {gameStates} from "./App";
@@ -16,6 +16,7 @@ const offsets = {
     [C6]: -octaveOffset * 2,
     [C7]: -octaveOffset * 3,
     [C8]: -octaveOffset * 4,
+    [C9]: -octaveOffset * 5,
 };
 export const offsetSharp = {
     0: 0,
@@ -29,7 +30,8 @@ export const offsetSharp = {
     8: 4,
     9: 5,
     10: 5,
-    11: 6
+    11: 6,
+    12:7
 };
 export const offsetFlat = {
     0: 0,
@@ -43,7 +45,8 @@ export const offsetFlat = {
     8: 5,
     9: 5,
     10: 6,
-    11: 6
+    11: 6,
+    12:7
 };
 
 class Sheet extends PureComponent {

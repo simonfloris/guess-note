@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {C2, whiteKeys, blackKeys} from "./constants";
 import Key from "./Key";
-import {gameStates} from "./App";
 
 export const keyTypes={
     black:'black',
