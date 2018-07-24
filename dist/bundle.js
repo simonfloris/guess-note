@@ -1026,7 +1026,7 @@ const C0 = 12,
       C8 = 108,
       C9 = 120;
 
-const constants_octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
+const constants_octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'h'];
 const blackKeys = [1, 3, 6, 8, 10];
 const constants_whiteKeys = [0, 2, 4, 5, 7, 9, 11];
 const noteModifiers = {
@@ -1214,30 +1214,31 @@ function mod(n, m) {
 
 
 
-const WOBBLY_SPRING = { stiffness: 300, damping: 20 };
-const HARD_SPRING = { stiffness: 400, damping: 100 };
-const SMOOTH_SPRING = { stiffness: 254, damping: 20 };
+const WOBBLY_SPRING = { stiffness: 250, damping: 20 };
+const HARD_SPRING = { stiffness: 300, damping: 50 };
+const SMOOTH_SPRING = { stiffness: 120, damping: 20 };
 
 const Title = () => {
 
     return react_default.a.createElement(
         react_motion["Motion"],
         {
-            defaultStyle: { top: 10, scale: 6, o: 0.7, r: 255, g: 0, b: 0 },
+            defaultStyle: { rotate: 180, top: 100, scale: 20, o: 0.7, r: 200, g: 200, b: 200 },
             style: {
                 scale: Object(react_motion["spring"])(1, SMOOTH_SPRING),
                 o: Object(react_motion["spring"])(1, HARD_SPRING),
-                top: Object(react_motion["spring"])(0, WOBBLY_SPRING),
+                top: Object(react_motion["spring"])(0, HARD_SPRING),
                 r: Object(react_motion["spring"])(2, WOBBLY_SPRING),
                 g: Object(react_motion["spring"])(136, WOBBLY_SPRING),
-                b: Object(react_motion["spring"])(209, WOBBLY_SPRING)
+                b: Object(react_motion["spring"])(209, WOBBLY_SPRING),
+                rotate: Object(react_motion["spring"])(0, WOBBLY_SPRING)
             } },
         iStyle => react_default.a.createElement(
             "div",
             { style: {
                     color: `rgba(${iStyle.r},${iStyle.g},${iStyle.b},${iStyle.o})`,
-                    top: iStyle.top,
-                    transform: `scale(${iStyle.scale},${iStyle.scale})`
+                    top: `${iStyle.top}%`,
+                    transform: `rotate(${iStyle.rotate}deg) scale(${iStyle.scale},${iStyle.scale})`
                 }, className: "title" },
             react_default.a.createElement(
                 "h5",
@@ -1476,12 +1477,12 @@ const Solve = ({ guessedNote, note }) => {
 // CONCATENATED MODULE: ./src/Settings.js
 
 
-
+const MAX_KEY = 108;
 class Settings_Settings extends react["Component"] {
     render() {
         const { onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic, maxTries, tries, onSetTries } = this.props;
-        const validRanges = [1, 2, 3, 4, 5].filter(range => startC + range * 12 < 126);
-        const validStarts = [C5, C4, C3, C2, C1].filter(start => start + octaveCount * 12 < 108);
+        const validRanges = [1, 2, 3, 4, 5].filter(range => startC + range * 12 < MAX_KEY);
+        const validStarts = [C5, C4, C3, C2, C1].filter(start => start + octaveCount * 12 < MAX_KEY);
         return react_default.a.createElement(
             "div",
             { className: "settings" },
@@ -1729,6 +1730,22 @@ class App_App extends react["Component"] {
                     return;
 
             }
+        }, this.saveStateToLocalStorage = () => {
+            for (let key of ['score']) {
+                localStorage.setItem(key, JSON.stringify(this.state[key]));
+            }
+        }, this.hydrateStateWithLocalStorage = () => {
+            for (let key of ['score']) {
+                if (localStorage.hasOwnProperty(key)) {
+                    let value = localStorage.getItem(key);
+                    try {
+                        value = JSON.parse(value);
+                        this.setState({ [key]: value });
+                    } catch (e) {
+                        this.setState({ [key]: value });
+                    }
+                }
+            }
         }, _temp;
     }
 
@@ -1758,7 +1775,14 @@ class App_App extends react["Component"] {
     }
 
     componentDidMount() {
+        this.hydrateStateWithLocalStorage();
+        window.addEventListener("beforeunload", this.saveStateToLocalStorage);
         this.init();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("beforeunload", this.saveStateToLocalStorage);
+        localStorage.setItem('score', `${this.state.score}`);
     }
 
     noteRange() {

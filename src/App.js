@@ -204,7 +204,6 @@ class App extends Component {
         }
     };
     saveStateToLocalStorage = () => {
-        debugger;
         for (let key of ['score']) {
             localStorage.setItem(key, JSON.stringify(this.state[key]));
         }
@@ -212,7 +211,6 @@ class App extends Component {
 
     hydrateStateWithLocalStorage = () => {
         for (let key of ['score']) {
-            debugger;
             if (localStorage.hasOwnProperty(key)) {
                 let value = localStorage.getItem(key);
                 try {
