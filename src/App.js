@@ -112,7 +112,20 @@ class App extends Component {
     };
 
     componentDidMount() {
+        this.hydrateStateWithLocalStorage();
+        window.addEventListener(
+            "beforeunload",
+            this.saveStateToLocalStorage
+        );
         this.init();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener(
+            "beforeunload",
+            this.saveStateToLocalStorage
+        );
+        localStorage.setItem('score', `${this.state.score}`);
     }
 
     noteRange() {
@@ -188,6 +201,27 @@ class App extends Component {
             default:
                 return;
 
+        }
+    };
+    saveStateToLocalStorage = () => {
+        debugger;
+        for (let key of ['score']) {
+            localStorage.setItem(key, JSON.stringify(this.state[key]));
+        }
+    };
+
+    hydrateStateWithLocalStorage = () => {
+        for (let key of ['score']) {
+            debugger;
+            if (localStorage.hasOwnProperty(key)) {
+                let value = localStorage.getItem(key);
+                try {
+                    value = JSON.parse(value);
+                    this.setState({[key]: value});
+                } catch (e) {
+                    this.setState({[key]: value});
+                }
+            }
         }
     }
 }

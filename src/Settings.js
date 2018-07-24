@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {C1, C2, C3, C4, C5, notes, octave} from "./constants";
-
+const MAX_KEY=108;
 class Settings extends Component {
     render() {
         const {onSetRange, onSetStart, onToggleShowKeyName, showKeyName, startC, octaveCount, automatic, onToggleAutomatic, maxTries,tries, onSetTries} = this.props;
-        const validRanges=[1, 2, 3, 4, 5].filter(range=>(startC+range*12)<126);
-        const validStarts=[C5, C4, C3, C2, C1].filter(start=>(start+octaveCount*12)<108);
+        const validRanges=[1, 2, 3, 4, 5].filter(range=>(startC+range*12)<MAX_KEY);
+        const validStarts=[C5, C4, C3, C2, C1].filter(start=>(start+octaveCount*12)<MAX_KEY);
         return (
             <div className="settings">
                 <div>

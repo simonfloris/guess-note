@@ -142,7 +142,7 @@ const
     C8 = 108,
     C9 = 120;
 
-const octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'b'];
+const octave = ['c', 'cis', 'd', 'dis', 'e', 'f', 'fis', 'g', 'gis', 'a', 'ais', 'h'];
 const blackKeys = [1, 3, 6, 8, 10];
 const whiteKeys = [0, 2, 4, 5, 7, 9, 11];
 const noteModifiers = {
